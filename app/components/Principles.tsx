@@ -10,23 +10,23 @@ gsap.registerPlugin(ScrollTrigger);
 const principles = [
   {
     time: "00:01",
-    title: "Motion explains, it doesn't decorate",
-    desc: "Every animation should answer a question the interface is already asking — what changed, what's next, what's connected to what.",
+    title: "Front-end stack",
+    desc: "WordPress, HTML5, CSS, JavaScript, Node.js, Tailwind & React — from layout to API-driven data visualization.",
   },
   {
     time: "00:02",
-    title: "One orchestrated moment beats ten small ones",
-    desc: "Scattered micro-animations read as noise. A single well-timed sequence on load or scroll lands harder and gets remembered.",
+    title: "Design & productivity",
+    desc: "Adobe Photoshop, Canva, MS Office, Notion — turning ideas into visuals and workflows that stay organized.",
   },
   {
     time: "00:03",
-    title: "Easing is the personality",
-    desc: "The same move with a different ease curve reads as a different brand entirely — snappy, elastic, weighty. I pick one vocabulary and stay in it.",
+    title: "IT support",
+    desc: "Windows troubleshooting, hardware & software diagnostics, account creation, and email support.",
   },
   {
     time: "00:04",
-    title: "Reduced motion is a real state, not an afterthought",
-    desc: "Every build ships with a prefers-reduced-motion path that keeps the interface fully usable with the animation stripped out.",
+    title: "Networking & security",
+    desc: "Basic computer networking, basic cybersecurity, and CCNA fundamentals from Cisco.",
   },
 ];
 
@@ -56,7 +56,7 @@ export default function Principles() {
   return (
     <section className="principles" id="principles" ref={scope}>
       <div className="wrap">
-        <div className="section-eyebrow">How I approach motion</div>
+        <div className="section-eyebrow">Toolkit &amp; skills</div>
         {principles.map((principle) => (
           <div key={principle.time} className="tc-row">
             <div className="tc-code">{principle.time}</div>
