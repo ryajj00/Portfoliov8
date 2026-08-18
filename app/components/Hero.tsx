@@ -4,26 +4,6 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { useRef } from "react";
 
-function splitLineChars(line: Element) {
-  const walk = (node: Node) => {
-    Array.from(node.childNodes).forEach((child) => {
-      if (child.nodeType === Node.TEXT_NODE) {
-        const frag = document.createDocumentFragment();
-        (child.textContent || "").split("").forEach((ch) => {
-          const span = document.createElement("span");
-          span.className = "char";
-          span.textContent = ch === " " ? " " : ch;
-          frag.appendChild(span);
-        });
-        child.replaceWith(frag);
-      } else if (child.nodeType === Node.ELEMENT_NODE) {
-        walk(child); // recurse into accent-word spans, chars inherit color
-      }
-    });
-  };
-  walk(line);
-}
-
 export default function Hero() {
   const scope = useRef<HTMLElement>(null);
 
@@ -33,40 +13,118 @@ export default function Hero() {
     const el = scope.current;
     if (!el) return;
 
-    el.querySelectorAll(".hero-title .line").forEach(splitLineChars);
+    const loader = el.querySelector<HTMLElement>("#loader");
+    const num = el.querySelector<HTMLElement>("#num");
+    const bar = el.querySelector<HTMLElement>("#bar");
+    if (!loader || !num || !bar) return;
 
-    const chars = el.querySelectorAll(".hero-title .char");
-    if (!chars.length) return;
+    /* --- 0% -> 100% intro counter --- */
+    const state = { val: 0 };
+    const counter = gsap.to(state, {
+      val: 100,
+      duration: 2.2,
+      ease: "power2.inOut",
+      onUpdate: () => {
+        const v = Math.round(state.val);
+        num.textContent = String(v);
+        bar.style.transform = "scaleX(" + v / 100 + ")";
+      },
+    });
 
-    gsap.set(chars, { yPercent: 120, opacity: 0 });
-    gsap.set(".hero-eyebrow span", { yPercent: 120 });
-    gsap.set(".hero-sub", { opacity: 0, y: 20 });
+    /* --- master intro timeline --- */
+    const tl = gsap.timeline({ delay: 0.2 });
 
-    const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
-    tl.to(".hero-eyebrow span", { yPercent: 0, duration: 0.7 })
-      .to(chars, { yPercent: 0, opacity: 1, duration: 0.9, stagger: 0.018 }, "-=0.4")
-      .to(".hero-sub", { opacity: 1, y: 0, duration: 0.7 }, "-=0.5");
+    tl.to(loader, {
+      yPercent: -100,
+      duration: 0.9,
+      ease: "expo.inOut",
+      onStart: () => counter.kill(),
+      onComplete: () => {
+        loader.style.display = "none";
+      },
+    }, 2.15)
+      /* percent sign flips to accent as we hit 100 */
+      .fromTo(".hero .loader-count .pct", { opacity: 0 }, { opacity: 1, duration: 0.1 }, 2.0);
 
-    }, { scope });
+    /* reveal hero content beneath */
+    tl.from(".hero .title", { y: 18, opacity: 0, duration: 0.6, ease: "power3.out" }, 2.5)
+      .from(".hero .name .piece", {
+        yPercent: 110,
+        opacity: 0,
+        duration: 0.9,
+        stagger: 0.08,
+        ease: "expo.out",
+      }, 2.55)
+      .from(".hero .name .avatar-box", {
+        scale: 0.4,
+        opacity: 0,
+        duration: 0.7,
+        ease: "back.out(1.8)",
+      }, 2.68)
+      .from(".hero .name .period", { opacity: 0, scale: 0, duration: 0.4, ease: "back.out(2)" }, 2.85)
+      .from(".hero .sub", { y: 22, opacity: 0, duration: 0.7, ease: "power3.out" }, 3.3)
+      .from(".hero .scroll-cue", { y: 14, opacity: 0, duration: 0.7, ease: "power2.out" }, 3.5);
+
+    /* --- ambient drift for blobs/dots, never ending --- */
+    gsap.to(".hero .blob-1", { x: 40, y: 30, duration: 9, yoyo: true, repeat: -1, ease: "sine.inOut" });
+    gsap.to(".hero .blob-2", { x: -36, y: -24, duration: 11, yoyo: true, repeat: -1, ease: "sine.inOut" });
+    gsap.to(".hero .blob-3", { x: 24, y: -18, duration: 7, yoyo: true, repeat: -1, ease: "sine.inOut" });
+    gsap.to(".hero .dot-1", { y: -14, duration: 2.6, yoyo: true, repeat: -1, ease: "sine.inOut" });
+    gsap.to(".hero .dot-2", { y: 12, duration: 3.1, yoyo: true, repeat: -1, ease: "sine.inOut" });
+
+    /* keep mouse wheel hidden while loading so users don't scroll during intro */
+    document.body.style.overflow = "hidden";
+    tl.eventCallback("onComplete", () => {
+      document.body.style.overflow = "";
+    });
+  }, { scope });
 
   return (
     <section className="hero" id="hero" ref={scope}>
-      <div className="wrap">
-        <div className="hero-eyebrow">
-          <span>Interactive developer — motion &amp; front-end</span>
-        </div>
-        <h1 className="hero-title">
-          <span className="line">HI</span>
-          <span className="line">
-            I&apos;M <span className="accent-word">JR</span>
-          </span>
-          <span className="line">INFANTE</span>
+      {/* floating ambient shapes */}
+      <div className="blob blob-1"></div>
+      <div className="blob blob-2"></div>
+      <div className="blob blob-3"></div>
+      <div className="dot dot-1"></div>
+      <div className="dot dot-2"></div>
+
+      {/* ---------- intro loader ---------- */}
+      <div id="loader" aria-hidden="true">
+        <h1 className="loader-count" id="count">
+          <span id="num">0</span><span className="pct">%</span>
         </h1>
-        <p className="hero-sub">Let&apos;s work together as a team.</p>
+        <div className="loader-bar"><div className="loader-bar-fill" id="bar"></div></div>
+        <p className="loader-label">JR · Frontend Development</p>
       </div>
-      <div className="hero-scroll">
-        <div className="bar"></div>
-        SCROLL
+
+      {/* ---------- hero content ---------- */}
+      <h2 className="title">Hi, I&apos;m</h2>
+
+      <h1 className="name">
+        <span className="piece">JR</span>
+        <span className="avatar-box" aria-hidden="true">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <rect width="100" height="100" fill="#2e2e2e" />
+            <circle cx="50" cy="38" r="20" fill="#9fb6a1" />
+            <path d="M20 95c0-18 13-28 30-28s30 10 30 28" fill="#9fb6a1" />
+          </svg>
+        </span>
+        <span className="piece">INFANTE</span><span className="period">.</span>
+      </h1>
+
+      <p className="sub">
+        I build <span className="accent">motion-driven interfaces</span> that feel considered instead of static
+        <svg className="taco" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="taco">
+          <path d="M12 52c0-20 16-36 38-36s38 16 38 36c0 6-4 10-10 10H22c-6 0-10-4-10-10z" fill="#f5c04e" />
+          <path d="M20 52h60l-6 9H26z" fill="#c97b24" />
+          <circle cx="35" cy="46" r="4" fill="#d94f3d" /><circle cx="50" cy="44" r="4" fill="#d94f3d" /><circle cx="65" cy="46" r="4" fill="#d94f3d" />
+          <circle cx="30" cy="52" r="3" fill="#7fb24d" /><circle cx="44" cy="50" r="3" fill="#7fb24d" /><circle cx="58" cy="51" r="3" fill="#7fb24d" /><circle cx="72" cy="52" r="3" fill="#7fb24d" />
+        </svg>
+      </p>
+
+      <div className="scroll-cue">
+        <span className="mouse"></span>
+        Scroll
       </div>
     </section>
   );

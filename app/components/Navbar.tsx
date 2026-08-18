@@ -127,18 +127,18 @@ export default function Navbar() {
           justify-content: space-between;
           padding: 28px 6vw;
           /* at top: dark ink over the bright photo */
-          color: #111014;
+          color: #c3d8c5;
           background: transparent;
           border-bottom: 1px solid transparent;
           transition: color 0.3s ease, background 0.3s ease,
             border-color 0.3s ease, padding 0.3s ease;
         }
         .nav.scrolled {
-          color: #efebe3;
-          background: rgba(14, 13, 18, 0.82);
+          color: #c3d8c5;
+          background: rgba(41, 41, 41, 0.82);
           backdrop-filter: blur(10px);
           -webkit-backdrop-filter: blur(10px);
-          border-bottom: 1px solid #2a2732;
+          border-bottom: 1px solid #3a3a3a;
           padding-top: 18px;
           padding-bottom: 18px;
         }
@@ -203,10 +203,10 @@ export default function Navbar() {
           align-items: center;
           justify-content: center;
           gap: 40px;
-          background: rgba(14, 13, 18, 0.97);
+          background: rgba(41, 41, 41, 0.97);
           backdrop-filter: blur(14px);
           -webkit-backdrop-filter: blur(14px);
-          color: #efebe3;
+          color: #c3d8c5;
           will-change: transform, opacity;
         }
         .menu-link {
@@ -214,12 +214,12 @@ export default function Navbar() {
           font-weight: 800;
           font-size: clamp(2rem, 8vw, 3rem);
           text-transform: uppercase;
-          color: #efebe3;
+          color: #c3d8c5;
           opacity: 0;
           letter-spacing: 0.02em;
         }
         .menu-link:hover {
-          color: var(--accent, #7c5cff);
+          color: var(--accent, #c3d8c5);
         }
         .menu-exit {
           display: inline-flex;
@@ -227,10 +227,10 @@ export default function Navbar() {
           gap: 8px;
           margin-top: 32px;
           padding: 12px 28px;
-          border: 1px solid rgba(239, 235, 227, 0.55);
+          border: 1px solid rgba(195, 216, 197, 0.55);
           border-radius: 100px;
           background: none;
-          color: #efebe3;
+          color: #c3d8c5;
           font-family: var(--font-mono);
           font-size: 13px;
           letter-spacing: 0.05em;
@@ -239,9 +239,9 @@ export default function Navbar() {
           transition: color 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
         }
         .menu-exit:hover {
-          color: #0e0d12;
-          border-color: #efebe3;
-          background-color: #efebe3;
+          color: #292929;
+          border-color: #c3d8c5;
+          background-color: #c3d8c5;
         }
         .menu-footer {
           position: absolute;
@@ -252,7 +252,7 @@ export default function Navbar() {
           justify-content: space-between;
           font-family: var(--font-mono);
           font-size: 12px;
-          color: var(--fg-dim, #8b8792);
+          color: var(--fg-dim, #9fb6a1);
         }
         @media (max-width: 720px) {
           .nav-links {

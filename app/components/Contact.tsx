@@ -78,11 +78,11 @@ export default function Contact() {
         <div className="footer-divider left"></div>
         <div className="footer-divider right"></div>
 
-        <a href="mailto:infante.ryaj02@gmail.com" className="footer-side left">Write to LinkedIn →</a>
-        <a href="tel:+630445123" className="footer-side right">+ Write to Viber</a>
+        <a href="https://www.linkedin.com/in/jr-infante-269514259" className="footer-side left">Write to LinkedIn →</a>
+        <a href="tel:+639630445123" className="footer-side right">+ Write to Viber</a>
 
         <div className="footer-contact">
-          <a href="tel:+1234567890">+630445123</a>
+          <a href="tel:+639630445123">+63 963 044 5123</a>
           <a href="mailto:infante.ryaj02@gmail.com">infante.ryaj02@gmail.com</a>
         </div>
       </div>
