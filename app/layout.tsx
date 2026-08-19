@@ -26,7 +26,7 @@ const unbounded = Unbounded({
 });
 
 export const metadata: Metadata = {
-  title: "Portfolio",
+  title: "JR Infante - Portfolio",
   description: "Personal portfolio website",
 };
 

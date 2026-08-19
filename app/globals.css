@@ -328,7 +328,6 @@ a {
   z-index: 1;
 }
 .hero .sub .accent { color: #292929; font-weight: 500; }
-.hero .taco { display: inline-block; width: 1.1em; height: 1.1em; vertical-align: -0.18em; margin-left: 0.15em; }
 
 .hero .scroll-cue {
   position: absolute;
@@ -363,6 +362,22 @@ a {
   border-radius: 2px;
   background: #292929;
   transform: translateX(-50%);
+  animation: scroll-dot 1.8s ease-in-out infinite;
+}
+
+/* scroll-dot: the inner dot drifts down the mouse to hint at scrolling */
+@keyframes scroll-dot {
+  0%   { transform: translate(-50%, 0);    opacity: 0; }
+  30%  { opacity: 1; }
+  70%  { opacity: 1; }
+  100% { transform: translate(-50%, 14px); opacity: 0; }
+}
+.hero .scroll-cue .mouse {
+  animation: scroll-cue-bob 2.4s ease-in-out infinite;
+}
+@keyframes scroll-cue-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(6px); }
 }
 
 /* ---------- intro loader ---------- */
@@ -812,11 +827,11 @@ footer {
   white-space: nowrap;
   font-family: var(--font-display, "Unbounded", sans-serif);
   font-weight: 900;
-  font-size: clamp(2rem, 11vw, 15rem);
-  line-height: 0.2;
+  font-size: clamp(3.5rem, 15vw, 15rem);
+  line-height: 0.35;
   text-transform: none;
   color: var(--fg);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.04em;
   transform: translateY(30%);
   will-change: transform;
 }

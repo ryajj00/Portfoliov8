@@ -109,13 +109,7 @@ export default function Hero() {
       </h1>
 
       <p className="sub">
-        I build <span className="accent">motion-driven interfaces</span> that feel considered instead of static
-        <svg className="taco" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="taco">
-          <path d="M12 52c0-20 16-36 38-36s38 16 38 36c0 6-4 10-10 10H22c-6 0-10-4-10-10z" fill="#f5c04e" />
-          <path d="M20 52h60l-6 9H26z" fill="#c97b24" />
-          <circle cx="35" cy="46" r="4" fill="#d94f3d" /><circle cx="50" cy="44" r="4" fill="#d94f3d" /><circle cx="65" cy="46" r="4" fill="#d94f3d" />
-          <circle cx="30" cy="52" r="3" fill="#7fb24d" /><circle cx="44" cy="50" r="3" fill="#7fb24d" /><circle cx="58" cy="51" r="3" fill="#7fb24d" /><circle cx="72" cy="52" r="3" fill="#7fb24d" />
-        </svg>
+        I build <span className="accent">motion-driven interfaces</span> that feel considered instead of static.
       </p>
 
       <div className="scroll-cue">

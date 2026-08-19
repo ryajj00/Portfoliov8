@@ -121,7 +121,7 @@ export default function Navbar() {
           top: 0;
           left: 0;
           right: 0;
-          z-index: 100;
+          z-index: 130;
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -149,6 +149,9 @@ export default function Navbar() {
           letter-spacing: 0.02em;
           display: inline-block;
           will-change: transform;
+          /* keep the logo above the mobile overlay so tapping it closes the menu */
+          z-index: 140;
+          position: relative;
         }
         .nav-links {
           display: flex;
@@ -281,7 +284,7 @@ export default function Navbar() {
       `}</style>
 
       <nav ref={navRef} className={`nav ${scrolled ? "scrolled" : ""}`}>
-        <Link href="#hero" className="logo nav-item">
+        <Link href="#hero" className="logo nav-item" onClick={() => setMenuOpen(false)}>
           RYAJ
         </Link>
         <div className="nav-links">

@@ -53,6 +53,10 @@ export default function WorkReel() {
     if (!track || !counter || !bgBack || !bgFront) return;
 
     let front = true;
+    /* image already displayed on bgBack at mount — track it so we never
+       re-crossfade the same frame (prevents a background flash on entry
+       and skip redundant tweens when scrubbing back and forth) */
+    let currentImg = projects[0].img;
 
     const show = (img: string) => {
       if (front) {
@@ -93,8 +97,9 @@ export default function WorkReel() {
           const idx = Math.min(cards.length - 1, Math.floor(self.progress * cards.length));
           counter.textContent = `FRAME 0${idx + 1} / 0${cards.length}`;
           const img = projects[idx].img;
-          if (bgFront.dataset.img !== img) {
-            bgFront.dataset.img = img;
+          /* only crossfade when the visible frame actually changes */
+          if (currentImg !== img) {
+            currentImg = img;
             show(img);
           }
         },
