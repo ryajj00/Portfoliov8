@@ -43,8 +43,8 @@ export default function Hero() {
         loader.style.display = "none";
       },
     }, 2.15)
-      /* percent sign flips to accent as we hit 100 */
-      .fromTo(".hero .loader-count .pct", { opacity: 0 }, { opacity: 1, duration: 0.1 }, 2.0);
+      /* percent sign glows as we hit 100 (now always visible during count) */
+      .fromTo(".hero .loader-count .pct", { opacity: 0.6 }, { opacity: 1, duration: 0.1 }, 2.0);
 
     /* reveal hero content beneath */
     tl.from(".hero .title", { y: 18, opacity: 0, duration: 0.6, ease: "power3.out" }, 2.5)
@@ -102,12 +102,8 @@ export default function Hero() {
 
       <h1 className="name">
         <span className="piece">JR</span>
-        <span className="avatar-box" aria-hidden="true">
-          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <rect width="100" height="100" fill="#2e2e2e" />
-            <circle cx="50" cy="38" r="20" fill="#9fb6a1" />
-            <path d="M20 95c0-18 13-28 30-28s30 10 30 28" fill="#9fb6a1" />
-          </svg>
+        <span className="avatar-box">
+          <img src="/imgs/workreel-imgs/profile.JPG" alt="Portrait of JR Infante" />
         </span>
         <span className="piece">INFANTE</span><span className="period">.</span>
       </h1>

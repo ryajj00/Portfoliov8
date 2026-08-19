@@ -236,9 +236,9 @@ a {
 }
 
 .hero .piece {
-  font-family: var(--font-display, "Unbounded", sans-serif);
-  font-size: clamp(4rem, 18vw, 12rem);
-  font-weight: 600;
+  font-family: var(--font-syne, "Syne", sans-serif);
+  font-size: clamp(2.8rem, 12.6vw, 8.4rem);
+  font-weight: 700;
   letter-spacing: -0.04em;
   line-height: 1.02;
   color: #292929;
@@ -249,17 +249,17 @@ a {
 
 .hero .avatar,
 .hero .avatar-box {
-  width: 0.6em;
-  height: 0.6em;
+  font-size: clamp(2.8rem, 12.6vw, 8.4rem);
+  width: 1em;
+  height: 1em;
   min-width: 44px;
   min-height: 44px;
-  border-radius: 50%;
+  border-radius: 0;
   overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin: 0 0.12em;
-  box-shadow: 0 0 0 3px #c3d8c5, 0 0 0 4px rgba(41, 41, 41, 0.45);
+  margin: 0 0.3rem;
   background: #e9edea;
   flex: none;
 }
@@ -297,17 +297,17 @@ a {
 .hero .name-right .piece { color: #292929; }
 
 .hero .avatar-box {
-  width: 0.6em;
-  height: 0.6em;
+  font-size: clamp(2.8rem, 12.6vw, 8.4rem);
+  width: 1em;
+  height: 1em;
   min-width: 44px;
   min-height: 44px;
-  border-radius: 50%;
+  border-radius: 0;
   overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin: 0 0.12em;
-  box-shadow: 0 0 0 3px #c3d8c5, 0 0 0 4px rgba(41, 41, 41, 0.45);
+  margin: 0 0.3rem;
   background: #e9edea;
   flex: none;
 }
@@ -731,6 +731,14 @@ footer {
   right: 6vw;
 }
 
+/* tap targets: bigger hit area for contact links on touch */
+.footer-contact a {
+  padding: 8px 12px;
+}
+.footer-contact a:hover {
+  color: var(--accent);
+}
+
 .footer-contact {
   text-align: center;
 }
@@ -839,11 +847,37 @@ footer {
   .footer-divider {
     display: none;
   }
-  .footer-side {
-    display: none;
-  }
   .footer-zone {
     padding: 14vh 6vw 6vh;
+    flex-direction: column;
+    gap: 28px;
+    justify-content: flex-start;
+    min-height: 0;
+  }
+  /* keep the side CTAs visible: stack them under the main contact block */
+  .footer-side {
+    position: static;
+    transform: none;
+    display: block;
+    font-size: 14px;
+    padding: 14px 0;
+    text-align: center;
+  }
+  .footer-side.left {
+    order: 2;
+  }
+  .footer-side.right {
+    order: 3;
+  }
+  .footer-contact {
+    order: 1;
+    width: 100%;
+  }
+  .footer-contact a {
+    font-size: clamp(1.35rem, 5vw, 1.8rem);
+    padding: 10px 12px;
+    word-break: break-word;
+    -webkit-tap-highlight-color: transparent;
   }
   .footer-legal-row {
     flex-direction: column;

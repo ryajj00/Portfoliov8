@@ -8,7 +8,7 @@ import { useState, useEffect, useRef } from "react";
 
 const navLinks = [
   { href: "#work", label: "Work" },
-  { href: "#principles", label: "Principles" },
+  { href: "#principles", label: "Toolkit" },
   { href: "#contact", label: "Contact" },
 ];
 
@@ -127,7 +127,7 @@ export default function Navbar() {
           justify-content: space-between;
           padding: 28px 6vw;
           /* at top: dark ink over the bright photo */
-          color: #c3d8c5;
+          color: #292929;
           background: transparent;
           border-bottom: 1px solid transparent;
           transition: color 0.3s ease, background 0.3s ease,
@@ -159,14 +159,23 @@ export default function Navbar() {
         }
         .nav-links a {
           position: relative;
+          padding: 8px 14px;
+          border-radius: 100px;
           opacity: 0.7;
-          transition: opacity 0.25s ease;
-          padding-bottom: 4px;
+          transition: opacity 0.25s ease, color 0.25s ease,
+            background-color 0.25s ease;
           display: inline-block;
           will-change: transform;
         }
+        /* hover: filled pill that inverts the current nav text color */
         .nav-links a:hover {
           opacity: 1;
+          background-color: #292929;
+          color: #c3d8c5;
+        }
+        .nav.scrolled .nav-links a:hover {
+          background-color: #c3d8c5;
+          color: #292929;
         }
         .nav-links a::after {
           content: "";

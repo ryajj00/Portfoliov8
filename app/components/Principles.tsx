@@ -34,9 +34,16 @@ export default function Principles() {
   const scope = useRef<HTMLElement>(null);
 
   useGSAP(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const el = scope.current;
     if (!el) return;
+
+    // Fallback for reduced motion + non-JS: show rows without the reveal.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el.querySelectorAll<HTMLElement>(".tc-row").forEach((row) => {
+        gsap.set(row, { opacity: 1, y: 0 });
+      });
+      return;
+    }
 
     el.querySelectorAll(".tc-row").forEach((row) => {
       gsap.to(row, {
@@ -56,7 +63,7 @@ export default function Principles() {
   return (
     <section className="principles" id="principles" ref={scope}>
       <div className="wrap">
-        <div className="section-eyebrow">Toolkit &amp; skills</div>
+        <div className="section-eyebrow">Toolkit</div>
         {principles.map((principle) => (
           <div key={principle.time} className="tc-row">
             <div className="tc-code">{principle.time}</div>
