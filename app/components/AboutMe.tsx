@@ -47,7 +47,7 @@ export default function AboutMe() {
         </p>
         <p className="about-body about-line">
           A BSIT graduate from ICCT Colleges with hands-on experience building web
-          applications with HTML, CSS, JavaScript, and Node.js, plus an internship
+          applications with HTML, CSS, JavaScript, and Next.js on Music Studio App, plus an internship
           maintaining WordPress sites at Oracle Petroleum Corporation. I work across
           the front-end stack — from layout to API-driven data visualization — and
           pair it with design tools like Photoshop, Canva, and AI workflows to ship

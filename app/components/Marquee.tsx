@@ -6,8 +6,7 @@ import { useRef } from "react";
 
 const items = [
   "FRONT-END DEV",
-  "IT SUPPORT",
-  "MOTION DESIGN",
+  "AI TOOLS",
   "GRAPHICS DESIGN",
   "PIXEL ART",
 ];

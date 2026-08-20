@@ -28,6 +28,9 @@ const unbounded = Unbounded({
 export const metadata: Metadata = {
   title: "JR Infante - Portfolio",
   description: "Personal portfolio website",
+  icons: {
+    icon: "/imgs/workreel-imgs/jr-favicon.ico",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

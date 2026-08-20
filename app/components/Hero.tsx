@@ -65,12 +65,19 @@ export default function Hero() {
       .from(".hero .sub", { y: 22, opacity: 0, duration: 0.7, ease: "power3.out" }, 3.3)
       .from(".hero .scroll-cue", { y: 14, opacity: 0, duration: 0.7, ease: "power2.out" }, 3.5);
 
-    /* --- ambient drift for blobs/dots, never ending --- */
+    /* --- ambient drift for blobs, never ending --- */
     gsap.to(".hero .blob-1", { x: 40, y: 30, duration: 9, yoyo: true, repeat: -1, ease: "sine.inOut" });
     gsap.to(".hero .blob-2", { x: -36, y: -24, duration: 11, yoyo: true, repeat: -1, ease: "sine.inOut" });
     gsap.to(".hero .blob-3", { x: 24, y: -18, duration: 7, yoyo: true, repeat: -1, ease: "sine.inOut" });
-    gsap.to(".hero .dot-1", { y: -14, duration: 2.6, yoyo: true, repeat: -1, ease: "sine.inOut" });
-    gsap.to(".hero .dot-2", { y: 12, duration: 3.1, yoyo: true, repeat: -1, ease: "sine.inOut" });
+
+    /* --- scroll cue mouse wheel animation --- */
+    gsap.to(".hero .scroll-cue .mouse-wheel", {
+      y: 12,
+      duration: 1.2,
+      yoyo: true,
+      repeat: -1,
+      ease: "power2.inOut",
+    });
 
     /* keep mouse wheel hidden while loading so users don't scroll during intro */
     document.body.style.overflow = "hidden";
@@ -85,8 +92,6 @@ export default function Hero() {
       <div className="blob blob-1"></div>
       <div className="blob blob-2"></div>
       <div className="blob blob-3"></div>
-      <div className="dot dot-1"></div>
-      <div className="dot dot-2"></div>
 
       {/* ---------- intro loader ---------- */}
       <div id="loader" aria-hidden="true">
@@ -94,7 +99,7 @@ export default function Hero() {
           <span id="num">0</span><span className="pct">%</span>
         </h1>
         <div className="loader-bar"><div className="loader-bar-fill" id="bar"></div></div>
-        <p className="loader-label">JR · Frontend Development</p>
+        <p className="loader-label">Loading · </p>
       </div>
 
       {/* ---------- hero content ---------- */}
@@ -109,11 +114,13 @@ export default function Hero() {
       </h1>
 
       <p className="sub">
-        I build <span className="accent">motion-driven interfaces</span> that feel considered instead of static.
+        Bridging the gap between <span className="accent">design and scalable front-end</span> code.
       </p>
 
       <div className="scroll-cue">
-        <span className="mouse"></span>
+        <span className="mouse">
+          <span className="mouse-wheel"></span>
+        </span>
         Scroll
       </div>
     </section>

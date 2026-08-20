@@ -26,7 +26,7 @@ const projects = [
     num: "03",
     title: "T-shirt Layouts",
     desc: "Print-on-demand apparel mock-ups — t-shirt layouts for an apparel customizer, from placement to production-ready renders.",
-    tags: ["Mock-up", "POD", "Apparel Customizer", "Photoshop", "Canva"],
+    tags: ["Mock-up", "Apparel Customizer", "Photoshop", "Canva"],
     img: "/imgs/workreel-imgs/03.png",
   },
   {
@@ -40,17 +40,15 @@ const projects = [
 
 export default function WorkReel() {
   const scope = useRef<HTMLElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
   const counterRef = useRef<HTMLSpanElement>(null);
   const bgBackRef = useRef<HTMLDivElement>(null);
   const bgFrontRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-    const track = trackRef.current;
     const counter = counterRef.current;
     const bgBack = bgBackRef.current;
     const bgFront = bgFrontRef.current;
-    if (!track || !counter || !bgBack || !bgFront) return;
+    if (!counter || !bgBack || !bgFront) return;
 
     let front = true;
     /* image already displayed on bgBack at mount — track it so we never
@@ -72,37 +70,33 @@ export default function WorkReel() {
     };
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      track.style.overflowX = "auto";
-      track.style.paddingBottom = "24px";
       bgFront.style.backgroundImage = `url(${projects[0].img})`;
       bgFront.style.opacity = "0.5";
       bgBack.style.opacity = "0";
       return;
     }
 
-    const cards = Array.from(scope.current!.querySelectorAll(".reel-card"));
-    const scrollAmount = () => track.scrollWidth - window.innerWidth + window.innerWidth * 0.06;
+    const totalFrames = projects.length;
+    // each frame advances over half a viewport of scroll (0.5 = 50%)
+    const scrollDistance = window.innerHeight * totalFrames * 0.5;
+    const frames = Array.from(scope.current!.querySelectorAll(".reel-copy-frame"));
 
-    gsap.to(track, {
-      x: () => -scrollAmount(),
-      ease: "none",
-      scrollTrigger: {
-        trigger: scope.current,
-        start: "top top",
-        end: () => "+=" + scrollAmount() * 1.4,
-        scrub: 1,
-        pin: true,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          const idx = Math.min(cards.length - 1, Math.floor(self.progress * cards.length));
-          counter.textContent = `FRAME 0${idx + 1} / 0${cards.length}`;
-          const img = projects[idx].img;
-          /* only crossfade when the visible frame actually changes */
-          if (currentImg !== img) {
-            currentImg = img;
-            show(img);
-          }
-        },
+    ScrollTrigger.create({
+      trigger: scope.current,
+      start: "top top",
+      end: () => `+=${scrollDistance}`,
+      scrub: 1,
+      pin: true,
+      invalidateOnRefresh: true,
+      onUpdate: (self) => {
+        const idx = Math.min(totalFrames - 1, Math.floor(self.progress * totalFrames));
+        counter.textContent = `FRAME 0${idx + 1} / 0${totalFrames}`;
+        frames.forEach((el, i) => el.classList.toggle("is-active", i === idx));
+        const img = projects[idx].img;
+        if (bgFront.dataset.img !== img) {
+          bgFront.dataset.img = img;
+          show(img);
+        }
       },
     });
   }, { scope });
@@ -122,24 +116,16 @@ export default function WorkReel() {
           FRAME 01 / 04
         </span>
       </div>
-      <div className="reel-track" ref={trackRef}>
-        {projects.map((project) => (
-          <div key={project.num} className="reel-card">
-            <div
-              className="reel-img"
-              style={{ backgroundImage: `url(${project.img})` }}
-              role="img"
-              aria-label={project.title}
-            />
+      <div className="reel-copy">
+        {projects.map((project, i) => (
+          <div key={project.num} className={`reel-copy-frame${i === 0 ? " is-active" : ""}`}>
             <span className="frame-num">{project.num}</span>
-            <div>
-              <h3>{project.title}</h3>
-              <p>{project.desc}</p>
-              <div className="tags">
-                {project.tags.map((tag) => (
-                  <span key={tag}>{tag}</span>
-                ))}
-              </div>
+            <h3>{project.title}</h3>
+            <p>{project.desc}</p>
+            <div className="tags">
+              {project.tags.map((tag) => (
+                <span key={tag}>{tag}</span>
+              ))}
             </div>
           </div>
         ))}

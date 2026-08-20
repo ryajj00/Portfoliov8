@@ -148,6 +148,29 @@ body {
   overflow-x: hidden;
 }
 
+/* ---------- minimal dark scrollbar ---------- */
+* {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: var(--accent-2) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
 ::selection {
   background: var(--accent);
   color: var(--bg);
@@ -190,14 +213,6 @@ a {
 .hero .blob-1 { width: 420px; height: 420px; top: -10%; left: -8%; background: rgba(41, 41, 41, 0.35); }
 .hero .blob-2 { width: 360px; height: 360px; bottom: -12%; right: -8%; background: rgba(41, 41, 41, 0.22); }
 .hero .blob-3 { width: 180px; height: 180px; top: 55%; left: 12%; background: rgba(41, 41, 41, 0.18); }
-.hero .dot {
-  position: absolute;
-  pointer-events: none;
-  border-radius: 50%;
-  background: #292929;
-}
-.hero .dot-1 { width: 8px; height: 8px; top: 18%; right: 18%; opacity: 0.9; }
-.hero .dot-2 { width: 5px; height: 5px; bottom: 24%; left: 22%; opacity: 0.7; }
 
 .hero .title {
   margin: 0 0 1.6rem;
@@ -352,8 +367,7 @@ a {
   border-radius: 12px;
   position: relative;
 }
-.hero .scroll-cue .mouse::after {
-  content: '';
+.hero .scroll-cue .mouse-wheel {
   position: absolute;
   top: 6px;
   left: 50%;
@@ -528,12 +542,26 @@ a {
   isolation: isolate;
 }
 
+/* bottom gradient so lower-left text stays legible over bright images */
+.reel-pin::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.35) 35%,
+    transparent 55%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
 .reel-bg {
   position: absolute;
-  inset: -40px;
+  inset: 0;
   background-size: cover;
   background-position: center;
-  filter: blur(20px);
   opacity: 0.5;
   z-index: -1;
   transition: background-image 0.4s ease;
@@ -553,6 +581,72 @@ a {
   letter-spacing: 0.05em;
   text-transform: uppercase;
   z-index: 2;
+}
+
+.reel-copy {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.reel-copy-frame {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  text-align: left;
+  padding: 0 6vw 64px;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  pointer-events: none;
+}
+
+.reel-copy-frame.is-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reel-copy-frame .frame-num {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--accent);
+}
+
+.reel-copy-frame h3 {
+  font-family: var(--font-display, "Unbounded", sans-serif);
+  font-weight: 800;
+  font-size: clamp(1.8rem, 5vw, 4rem);
+  text-transform: uppercase;
+  line-height: 1.05;
+  margin-top: 16px;
+}
+
+.reel-copy-frame p {
+  font-size: clamp(14px, 1.5vw, 18px);
+  color: var(--fg-dim);
+  margin-top: 16px;
+  max-width: 52ch;
+}
+
+.reel-copy-frame .tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.reel-copy-frame .tags span {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--fg-dim);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 4px 12px;
 }
 
 .reel-track {
@@ -644,6 +738,23 @@ a {
 /* ---------- principles (timecode list) ---------- */
 .principles {
   padding: 14vh 0;
+  background: #000;
+}
+
+/* ---------- curtain reveal: Contact stacks behind Principles ---------- */
+.principles-contact {
+  position: relative;
+}
+
+.principles-contact footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 0;
+}
+
+.principles-contact .principles {
+  position: relative;
+  z-index: 1;
 }
 
 .section-eyebrow {
@@ -754,6 +865,50 @@ footer {
   color: var(--accent);
 }
 
+/* ---------- copy-on-click cursor (phone + email) ---------- */
+.copyable {
+  cursor: none;
+}
+
+.copy-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  background: #c3d8c5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #000;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.05s linear;
+}
+
+.copy-cursor::after {
+  content: "Copy";
+}
+
+.copy-cursor.is-visible {
+  opacity: 1;
+}
+
+.copy-cursor.is-copied {
+  background: #9fb6a1;
+}
+
+.copy-cursor.is-copied::after {
+  content: "Copied";
+}
+
 .footer-contact {
   text-align: center;
 }
@@ -827,8 +982,8 @@ footer {
   white-space: nowrap;
   font-family: var(--font-display, "Unbounded", sans-serif);
   font-weight: 900;
-  font-size: clamp(3.5rem, 15vw, 15rem);
-  line-height: 0.35;
+  font-size: clamp(2rem, 11vw, 15rem);
+  line-height: 0.4;
   text-transform: none;
   color: var(--fg);
   letter-spacing: -0.04em;
@@ -850,7 +1005,7 @@ footer {
   .hero .piece, .hero .avatar, .hero .avatar-box,
   .hero .arrow-wrap, .hero .arrow-svg,
   .hero .title, .hero .sub, .hero .scroll-cue,
-  .hero .blob, .hero .dot {
+  .hero .blob {
     animation: none !important;
   }
 }

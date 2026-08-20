@@ -11,7 +11,7 @@ const principles = [
   {
     time: "00:01",
     title: "Front-end stack",
-    desc: "WordPress, HTML5, CSS, JavaScript, Node.js, Tailwind & React — from layout to API-driven data visualization.",
+    desc: "WordPress, HTML5, CSS, JavaScript, Next.js, Tailwind & React — from layout to API-driven data visualization.",
   },
   {
     time: "00:02",
@@ -20,8 +20,8 @@ const principles = [
   },
   {
     time: "00:03",
-    title: "IT support",
-    desc: "Windows troubleshooting, hardware & software diagnostics, account creation, and email support.",
+    title: "AI Tools",
+    desc: "Claude Code, Cursor, and Stitch — working with AI assistants to build, ship, and iterate faster.",
   },
   {
     time: "00:04",

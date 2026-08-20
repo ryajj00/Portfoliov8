@@ -12,8 +12,10 @@ export default function Home() {
       <Marquee />
       <AboutMe />
       <WorkReel />
-      <Principles />
-      <Contact />
+      <div className="principles-contact">
+        <Principles />
+        <Contact />
+      </div>
     </>
   );
 }

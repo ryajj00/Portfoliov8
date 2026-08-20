@@ -3,12 +3,65 @@
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { gsap } from "gsap";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const EMAIL = "infante.ryaj02@gmail.com";
+const PHONE = "+639630445123";
+
 export default function Contact() {
   const scope = useRef<HTMLElement>(null);
+  const [copiedId, setCopiedId] = useState<null | "phone" | "email">(null);
+  const dotRef = useRef<HTMLDivElement | null>(null);
+
+  /* ---------- copy-on-click ---------- */
+  const copyToClipboard = async (id: "phone" | "email", text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedId(id);
+      dotRef.current?.classList.add("is-copied");
+      setTimeout(() => {
+        setCopiedId(null);
+        dotRef.current?.classList.remove("is-copied");
+      }, 1600);
+    } catch {
+      // clipboard API unavailable — fall back to a prompt-free selection method
+    }
+  };
+
+  useEffect(() => {
+    // custom copy cursor for the phone + email links
+    const dot = document.createElement("div");
+    dot.className = "copy-cursor";
+    document.body.appendChild(dot);
+    dotRef.current = dot;
+
+    const links = scope.current?.querySelectorAll<HTMLAnchorElement>(
+      ".copyable"
+    );
+    if (!links || links.length === 0) return;
+
+    const onMove = (e: MouseEvent) => {
+      dot.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+    };
+    const onEnter = () => dot.classList.add("is-visible");
+    const onLeave = () => dot.classList.remove("is-visible");
+
+    links.forEach((link) => {
+      link.addEventListener("mousemove", onMove);
+      link.addEventListener("mouseenter", onEnter);
+      link.addEventListener("mouseleave", onLeave);
+    });
+    return () => {
+      links.forEach((link) => {
+        link.removeEventListener("mousemove", onMove);
+        link.removeEventListener("mouseenter", onEnter);
+        link.removeEventListener("mouseleave", onLeave);
+      });
+      dot.remove();
+    };
+  }, []);
 
   useGSAP(() => {
     const reduceMotion = window.matchMedia(
@@ -82,8 +135,26 @@ export default function Contact() {
         <a href="tel:+639630445123" className="footer-side right">+ Write to Viber</a>
 
         <div className="footer-contact">
-          <a href="tel:+639630445123">+63 963 044 5123</a>
-          <a href="mailto:infante.ryaj02@gmail.com">infante.ryaj02@gmail.com</a>
+          <a
+            href="#"
+            className="copyable"
+            onClick={(e) => {
+              e.preventDefault();
+              copyToClipboard("phone", PHONE);
+            }}
+          >
+            {copiedId === "phone" ? "Copied ✓" : "+63 963 044 5123"}
+          </a>
+          <a
+            href="#"
+            className="copyable"
+            onClick={(e) => {
+              e.preventDefault();
+              copyToClipboard("email", EMAIL);
+            }}
+          >
+            {copiedId === "email" ? "Copied ✓" : "infante.ryaj02@gmail.com"}
+          </a>
         </div>
       </div>
 
