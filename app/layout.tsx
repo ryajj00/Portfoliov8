@@ -29,7 +29,8 @@ export const metadata: Metadata = {
   title: "JR Infante - Portfolio",
   description: "Personal portfolio website",
   icons: {
-    icon: "/imgs/workreel-imgs/jr-favicon.ico",
+    icon: "/imgs/workreel-imgs/profile.JPG",
+    shortcut: "/imgs/workreel-imgs/profile.JPG",
   },
 };
 
