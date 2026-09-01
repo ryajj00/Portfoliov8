@@ -1,11 +1,7 @@
 "use client";
 
-import { useGSAP } from "@gsap/react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useRef } from "react";
-
-gsap.registerPlugin(ScrollTrigger);
+import { useEffect, useRef, useState } from "react";
+import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 
 const projects = [
   {
@@ -14,6 +10,7 @@ const projects = [
     desc: "A front-end web app for booking rehearsal-studio rooms — clean UI with calendar views and live availability checks.",
     tags: ["UI", "Front-end", "Web App", "Next.js", "VS Code"],
     img: "/imgs/workreel-imgs/01.png",
+    link: "/work/18s-music-studio",
   },
   {
     num: "02",
@@ -39,97 +36,98 @@ const projects = [
 ];
 
 export default function WorkReel() {
-  const scope = useRef<HTMLElement>(null);
-  const counterRef = useRef<HTMLSpanElement>(null);
-  const bgBackRef = useRef<HTMLDivElement>(null);
-  const bgFrontRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const reduceMotion = useReducedMotion();
 
-  useGSAP(() => {
-    const counter = counterRef.current;
-    const bgBack = bgBackRef.current;
-    const bgFront = bgFrontRef.current;
-    if (!counter || !bgBack || !bgFront) return;
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 720px)");
+    setIsMobile(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
 
-    let front = true;
-    /* image already displayed on bgBack at mount — track it so we never
-       re-crossfade the same frame (prevents a background flash on entry
-       and skip redundant tweens when scrubbing back and forth) */
-    let currentImg = projects[0].img;
+  useEffect(() => {
+    if (isMobile) return;
+    const section = sectionRef.current;
+    if (!section) return;
+    if (reduceMotion) return;
 
-    const show = (img: string) => {
-      if (front) {
-        bgBack.style.backgroundImage = `url(${img})`;
-        gsap.fromTo(bgBack, { opacity: 0 }, { opacity: 0.5, duration: 0.6, overwrite: true });
-        gsap.to(bgFront, { opacity: 0, duration: 0.6, overwrite: true });
-      } else {
-        bgFront.style.backgroundImage = `url(${img})`;
-        gsap.fromTo(bgFront, { opacity: 0 }, { opacity: 0.5, duration: 0.6, overwrite: true });
-        gsap.to(bgBack, { opacity: 0, duration: 0.6, overwrite: true });
-      }
-      front = !front;
+    const onScroll = () => {
+      const rect = section.getBoundingClientRect();
+      const sectionTop = -rect.top;
+      const sectionHeight = rect.height - window.innerHeight;
+      if (sectionHeight <= 0) return;
+      const progress = Math.max(0, Math.min(1, sectionTop / sectionHeight));
+      const idx = Math.min(
+        projects.length - 1,
+        Math.floor(progress * projects.length)
+      );
+      setActiveIdx(idx);
     };
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      bgFront.style.backgroundImage = `url(${projects[0].img})`;
-      bgFront.style.opacity = "0.5";
-      bgBack.style.opacity = "0";
-      return;
-    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isMobile]);
 
-    const totalFrames = projects.length;
-    // each frame advances over half a viewport of scroll (0.5 = 50%)
-    const scrollDistance = window.innerHeight * totalFrames * 0.5;
-    const frames = Array.from(scope.current!.querySelectorAll(".reel-copy-frame"));
+  /* ---- Desktop: sticky pinned scroll ---- */
+  if (!isMobile) {
+    const currentImg = projects[activeIdx].img;
+    return (
+      <section className="reel-section" id="work" ref={sectionRef}>
+        <div className="reel-sticky">
+          <div className="reel-bg-layer" style={{ backgroundImage: `url(${currentImg})` }} />
+          <div className="reel-head">
+            <span>Performance and Experience</span>
+            <span>
+              FRAME 0{activeIdx + 1} / 0{projects.length}
+            </span>
+          </div>
+          {projects.map((project, i) => (
+            <div
+              key={project.num}
+              className={`reel-copy-frame${i === activeIdx ? " is-active" : ""}`}
+            >
+              <span className="frame-num">{project.num}</span>
+              <h3>{project.title}</h3>
+              <p>{project.desc}</p>
+              <div className="tags">
+                {project.tags.map((tag) => (
+                  <span key={tag}>{tag}</span>
+                ))}
+              </div>
+                          </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
 
-    ScrollTrigger.create({
-      trigger: scope.current,
-      start: "top top",
-      end: () => `+=${scrollDistance}`,
-      scrub: 1,
-      pin: true,
-      invalidateOnRefresh: true,
-      onUpdate: (self) => {
-        const idx = Math.min(totalFrames - 1, Math.floor(self.progress * totalFrames));
-        counter.textContent = `FRAME 0${idx + 1} / 0${totalFrames}`;
-        frames.forEach((el, i) => el.classList.toggle("is-active", i === idx));
-        const img = projects[idx].img;
-        if (bgFront.dataset.img !== img) {
-          bgFront.dataset.img = img;
-          show(img);
-        }
-      },
-    });
-  }, { scope });
-
+  /* ---- Mobile: vertical card stack ---- */
   return (
-    <section className="reel-pin" id="work" ref={scope}>
-      <div
-        className="reel-bg"
-        ref={bgBackRef}
-        data-img={projects[0].img}
-        style={{ backgroundImage: `url(${projects[0].img})`, opacity: 0.5 }}
-      />
-      <div className="reel-bg" ref={bgFrontRef} style={{ opacity: 0 }} />
-      <div className="reel-head">
+    <section className="reel-mobile" id="work">
+      <div className="reel-mobile-head">
         <span>Performance and Experience</span>
-        <span id="frame-counter" ref={counterRef}>
-          FRAME 01 / 04
-        </span>
       </div>
-      <div className="reel-copy">
-        {projects.map((project, i) => (
-          <div key={project.num} className={`reel-copy-frame${i === 0 ? " is-active" : ""}`}>
-            <span className="frame-num">{project.num}</span>
+      {projects.map((project) => (
+        <article key={project.num} className="reel-mobile-card">
+          <div className="reel-mobile-bg" style={{ backgroundImage: `url(${project.img})` }} />
+          <div className="reel-mobile-overlay" />
+          <div className="reel-mobile-content">
+            <span className="reel-mobile-num">{project.num} / 0{projects.length}</span>
             <h3>{project.title}</h3>
             <p>{project.desc}</p>
-            <div className="tags">
+            <div className="reel-mobile-tags">
               {project.tags.map((tag) => (
                 <span key={tag}>{tag}</span>
               ))}
             </div>
-          </div>
-        ))}
-      </div>
+                      </div>
+        </article>
+      ))}
     </section>
   );
 }

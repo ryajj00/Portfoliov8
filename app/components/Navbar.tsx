@@ -5,6 +5,8 @@ import { gsap } from "gsap";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { useReducedMotion } from "@/app/hooks/useReducedMotion";
+import { useMagnetic } from "@/app/hooks/useMagnetic";
 
 const navLinks = [
   { href: "#work", label: "Work" },
@@ -15,8 +17,10 @@ const navLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [logoHover, setLogoHover] = useState(false);
   const navRef = useRef<HTMLElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     const hero = document.querySelector<HTMLElement>(".hero");
@@ -39,48 +43,22 @@ export default function Navbar() {
     });
   }, []);
 
-  // Magnetic pull on desktop nav links
-  useGSAP(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    if (!window.matchMedia("(pointer: fine)").matches) return;
-
-    const items = navRef.current?.querySelectorAll<HTMLElement>(".nav-item");
-    if (!items || items.length === 0) return;
-
-    const strength = 0.3;
-    const handlers = new Map<HTMLElement, { onMove: (e: MouseEvent) => void; onLeave: () => void }>();
-
-    items.forEach((item) => {
-      const onMove = (e: MouseEvent) => {
-        const rect = item.getBoundingClientRect();
-        const relX = e.clientX - rect.left - rect.width / 2;
-        const relY = e.clientY - rect.top - rect.height / 2;
-        gsap.to(item, { x: relX * strength, y: relY * strength, duration: 0.4, ease: "power3.out" });
-      };
-      const onLeave = () => {
-        gsap.to(item, { x: 0, y: 0, duration: 0.6, ease: "elastic.out(1, 0.4)" });
-      };
-      item.addEventListener("mousemove", onMove);
-      item.addEventListener("mouseleave", onLeave);
-      handlers.set(item, { onMove, onLeave });
-    });
-
-    return () => {
-      handlers.forEach(({ onMove, onLeave }, item) => {
-        item.removeEventListener("mousemove", onMove);
-        item.removeEventListener("mouseleave", onLeave);
-      });
-    };
-  }, { scope: navRef });
+  // Magnetic pull on desktop nav links (using shared hook)
+  useMagnetic(navRef, {
+    selector: ".nav-item",
+    strength: 0.3,
+    duration: 0.4,
+    releaseDuration: 0.6,
+    releaseEase: "elastic.out(1, 0.4)",
+  });
 
   // Mobile menu GSAP transitions
   useEffect(() => {
     const overlay = overlayRef.current;
     if (!overlay) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (menuOpen) {
-      if (reduce) {
+      if (reduceMotion) {
         gsap.set(overlay, { display: "flex", opacity: 1 });
         gsap.set(".menu-link", { opacity: 1, y: 0 });
       } else {
@@ -97,7 +75,7 @@ export default function Navbar() {
         );
       }
     } else {
-      if (reduce) {
+      if (reduceMotion) {
         gsap.set(overlay, { display: "none" });
       } else {
         gsap.to(overlay, {
@@ -111,7 +89,7 @@ export default function Navbar() {
         });
       }
     }
-  }, [menuOpen]);
+  }, [menuOpen, reduceMotion]);
 
   return (
     <>
@@ -204,6 +182,15 @@ export default function Navbar() {
           color: inherit;
           padding: 6px;
           z-index: 130;
+          transition: color 0.3s ease;
+        }
+        .menu-toggle.open {
+          color: #c3d8c5;
+        }
+        @media (max-width: 720px) {
+          .menu-toggle.open {
+            color: #c3d8c5;
+          }
         }
         /* Mobile overlay menu */
         .menu-overlay {
@@ -233,29 +220,7 @@ export default function Navbar() {
         .menu-link:hover {
           color: var(--accent, #c3d8c5);
         }
-        .menu-exit {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          margin-top: 32px;
-          padding: 12px 28px;
-          border: 1px solid rgba(195, 216, 197, 0.55);
-          border-radius: 100px;
-          background: none;
-          color: #c3d8c5;
-          font-family: var(--font-mono);
-          font-size: 13px;
-          letter-spacing: 0.05em;
-          text-transform: uppercase;
-          cursor: pointer;
-          transition: color 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
-        }
-        .menu-exit:hover {
-          color: #292929;
-          border-color: #c3d8c5;
-          background-color: #c3d8c5;
-        }
-        .menu-footer {
+                .menu-footer {
           position: absolute;
           bottom: 40px;
           left: 6vw;
@@ -284,8 +249,14 @@ export default function Navbar() {
       `}</style>
 
       <nav ref={navRef} className={`nav ${scrolled ? "scrolled" : ""}`}>
-        <Link href="#hero" className="logo nav-item" onClick={() => setMenuOpen(false)}>
-          RYAJ
+        <Link
+          href="#hero"
+          className="logo nav-item"
+          onClick={() => setMenuOpen(false)}
+          onMouseEnter={() => setLogoHover(true)}
+          onMouseLeave={() => setLogoHover(false)}
+        >
+          {logoHover ? "JR INFANTE" : "RYAJ"}
         </Link>
         <div className="nav-links">
           {navLinks.map((link) => (
@@ -295,7 +266,7 @@ export default function Navbar() {
           ))}
         </div>
         <button
-          className="menu-toggle"
+          className={`menu-toggle${menuOpen ? " open" : ""}`}
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
@@ -317,9 +288,6 @@ export default function Navbar() {
             {link.label}
           </Link>
         ))}
-        <button className="menu-exit" onClick={() => setMenuOpen(false)} aria-label="Close menu">
-          <X size={16} strokeWidth={2} /> Exit
-        </button>
         <div className="menu-footer">
           <span>RYAJ</span>
           <span>infante.ryaj02@gmail.com</span>

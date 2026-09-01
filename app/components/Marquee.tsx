@@ -3,6 +3,7 @@
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { useRef } from "react";
+import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 
 const items = [
   "FRONT-END DEV",
@@ -14,11 +15,12 @@ const items = [
 export default function Marquee() {
   const scope = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
 
   useGSAP(() => {
     const track = trackRef.current;
     if (!track) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (reduceMotion) return;
 
     const marqueeWidth = track.scrollWidth / 2;
     const tween = gsap.to(track, {

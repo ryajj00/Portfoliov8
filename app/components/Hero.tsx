@@ -2,13 +2,20 @@
 
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
+import { useReducedMotion } from "@/app/hooks/useReducedMotion";
+import { restoreScrollPosition } from "@/app/utils/scroll";
 
 export default function Hero() {
   const scope = useRef<HTMLElement>(null);
+  const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    restoreScrollPosition();
+  }, []);
 
   useGSAP(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (reduceMotion) return;
 
     const el = scope.current;
     if (!el) return;

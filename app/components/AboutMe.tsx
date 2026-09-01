@@ -4,6 +4,8 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRef } from "react";
+import { useReducedMotion } from "@/app/hooks/useReducedMotion";
+import { useScrollReveal } from "@/app/hooks/useScrollReveal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,11 +17,13 @@ const stats = [
 
 export default function AboutMe() {
   const scope = useRef<HTMLElement>(null);
+  const reduceMotion = useReducedMotion();
 
+  // GSAP-based scroll reveal for about-line elements (preserves original animation)
   useGSAP(() => {
     const el = scope.current;
     if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (reduceMotion) return;
 
     el.querySelectorAll(".about-line").forEach((line, i) => {
       gsap.from(line, {
@@ -37,21 +41,21 @@ export default function AboutMe() {
     });
   }, { scope });
 
+  // Also add CSS-based reveal for compatibility
+  useScrollReveal(".about-line", scope, { threshold: 0.15 });
+
   return (
     <section className="about" id="about" ref={scope}>
       <div className="wrap">
-        <div className="section-eyebrow">About me</div>
         <p className="about-lead about-line">
           I&apos;m JR Infante — a front-end web developer who turns layouts into
           motion-driven interfaces that feel considered instead of static.
         </p>
         <p className="about-body about-line">
-          A BSIT graduate from ICCT Colleges with hands-on experience building web
-          applications with HTML, CSS, JavaScript, and Next.js on Music Studio App, plus an internship
-          maintaining WordPress sites at Oracle Petroleum Corporation. I work across
-          the front-end stack — from layout to API-driven data visualization — and
-          pair it with design tools like Photoshop, Canva, and AI workflows to ship
-          interfaces that feel as good as they look.
+          Front-end developer with a background in digital art, an obsession with
+          fluid motion, and an eye for sharp, modern aesthetics.
+          I don't do static layouts, I build motion-driven web applications that
+          turn visitors into believers.
         </p>
         <div className="about-stats">
           {stats.map((s) => (

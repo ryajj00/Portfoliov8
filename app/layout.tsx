@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Syne, Unbounded } from "next/font/google";
 import Navbar from "./components/Navbar";
+import BackToHero from "./components/BackToHero";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <Navbar />
         <main className="flex-1 pt-16">{children}</main>
+        <BackToHero />
       </body>
     </html>
   );

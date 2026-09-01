@@ -1,11 +1,8 @@
 "use client";
 
-import { useGSAP } from "@gsap/react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useRef } from "react";
-
-gsap.registerPlugin(ScrollTrigger);
+import { useEffect, useRef } from "react";
+import { useReducedMotion } from "@/app/hooks/useReducedMotion";
+import { useScrollReveal } from "@/app/hooks/useScrollReveal";
 
 const principles = [
   {
@@ -32,40 +29,33 @@ const principles = [
 
 export default function Principles() {
   const scope = useRef<HTMLElement>(null);
+  const reduceMotion = useReducedMotion();
 
-  useGSAP(() => {
+  useEffect(() => {
     const el = scope.current;
     if (!el) return;
-
-    // Fallback for reduced motion + non-JS: show rows without the reveal.
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (reduceMotion) {
       el.querySelectorAll<HTMLElement>(".tc-row").forEach((row) => {
-        gsap.set(row, { opacity: 1, y: 0 });
+        row.style.opacity = "1";
+        row.style.transform = "none";
       });
       return;
     }
+  }, [reduceMotion]);
 
-    el.querySelectorAll(".tc-row").forEach((row) => {
-      gsap.to(row, {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: row,
-          start: "top 85%",
-          toggleActions: "play none none reverse",
-        },
-      });
-    });
-  }, { scope });
+  // CSS-based scroll reveal (handles is-visible class toggling)
+  useScrollReveal(".tc-row", scope, { threshold: 0.15 });
 
   return (
     <section className="principles" id="principles" ref={scope}>
       <div className="wrap">
         <div className="section-eyebrow">Toolkit</div>
-        {principles.map((principle) => (
-          <div key={principle.time} className="tc-row">
+        {principles.map((principle, i) => (
+          <div
+            key={principle.time}
+            className="tc-row"
+            style={{ transitionDelay: `${i * 80}ms` }}
+          >
             <div className="tc-code">{principle.time}</div>
             <div className="tc-body">
               <h4>{principle.title}</h4>
