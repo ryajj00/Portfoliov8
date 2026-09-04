@@ -212,7 +212,7 @@ a {
     rgba(0, 0, 0, 0.55) 30%,
     rgba(0, 0, 0, 0.25) 55%,
     transparent 75%
-  ), url("/imgs/hero-background.JPG");
+  ), url("/imgs/hero-background-desktop.JPG");
   background-size: cover;
   background-position: left center;
   z-index: 0;
@@ -1139,7 +1139,7 @@ footer {
     text-align: center;
   }
   .hero::before {
-    background-image: url("/imgs/hero-background.JPG");
+    background-image: url("/imgs/hero-background-mobile.JPG");
     background-position: center;
     background-size: cover;
   }
@@ -1150,7 +1150,7 @@ footer {
       rgba(0, 0, 0, 0.55) 30%,
       rgba(0, 0, 0, 0.25) 55%,
       transparent 75%
-    ), url("/imgs/hero-background.JPG");
+    ), url("/imgs/hero-background-mobile.JPG");
     background-position: center;
     background-size: cover;
   }
