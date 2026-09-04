@@ -8,13 +8,16 @@ import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Type for ScrollTrigger configuration (using generic object since InstanceVars doesn't exist)
+type ScrollTriggerVars = Record<string, unknown>;
+
 interface UseGSAPRevealOptions {
   /** Selector for elements to animate (relative to scope) */
   selector?: string;
   /** GSAP from/vars for the animation */
   fromVars?: gsap.TweenVars;
   /** ScrollTrigger configuration */
-  scrollTrigger?: ScrollTrigger.InstanceVars;
+  scrollTrigger?: ScrollTriggerVars;
   /** Optional delay before starting */
   delay?: number;
   /** Stagger amount for multiple elements */
@@ -38,11 +41,9 @@ export function useGSAPReveal(
     selector = ".reveal",
     fromVars = { opacity: 0, y: 24 },
     scrollTrigger = {
-      trigger: undefined, // will be set to scope
       start: "top 85%",
       toggleActions: "play none none reverse",
     },
-    delay = 0,
     stagger = 0,
     onComplete,
   } = options;
@@ -62,20 +63,18 @@ export function useGSAPReveal(
     }
 
     const ctx = gsap.context(() => {
-      const trigger = scrollTrigger.trigger || scope;
       gsap.from(selector, {
         ...fromVars,
         stagger,
-        delay,
         scrollTrigger: {
           ...scrollTrigger,
-          trigger,
+          trigger: scope,
         },
       });
     }, scope);
 
     return () => ctx.revert();
-  }, { scope: scopeRef, delay, stagger, reduceMotion });
+  }, { scope: scopeRef });
 
   // Also handle reduced motion changes
   useEffect(() => {
@@ -99,9 +98,7 @@ interface UseGSAPSingleRevealOptions {
   /** GSAP from/vars for the animation */
   fromVars?: gsap.TweenVars;
   /** ScrollTrigger configuration */
-  scrollTrigger?: ScrollTrigger.InstanceVars;
-  /** Optional delay */
-  delay?: number;
+  scrollTrigger?: ScrollTriggerVars;
   /** Called on complete */
   onComplete?: () => void;
 }
@@ -110,7 +107,7 @@ export function useGSAPSingleReveal(
   scopeRef: React.RefObject<HTMLElement | null>,
   options: UseGSAPSingleRevealOptions
 ) {
-  const { selector, fromVars = { opacity: 0, y: 30 }, scrollTrigger, delay = 0, onComplete } = options;
+  const { selector, fromVars = { opacity: 0, y: 30 }, scrollTrigger, onComplete } = options;
   const reduceMotion = useReducedMotion();
 
   useGSAP(() => {
@@ -126,7 +123,6 @@ export function useGSAPSingleReveal(
     }
 
     const ctx = gsap.context(() => {
-      const trigger = scrollTrigger.trigger || element;
       gsap.fromTo(
         element,
         fromVars,
@@ -134,10 +130,9 @@ export function useGSAPSingleReveal(
           ...fromVars,
           opacity: 1,
           y: 0,
-          delay,
           scrollTrigger: {
             ...scrollTrigger,
-            trigger,
+            trigger: element,
           },
         }
       );
@@ -147,5 +142,5 @@ export function useGSAPSingleReveal(
       ctx.revert();
       onComplete?.();
     };
-  }, { scope: scopeRef, selector, fromVars, scrollTrigger, delay, onComplete, reduceMotion });
+  }, { scope: scopeRef });
 }

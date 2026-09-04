@@ -37,7 +37,6 @@ export default function WordmarkReveal({
       start: "top 90%",
       toggleActions: "play none none reverse",
     },
-    delay: 0,
     onComplete: () => {
       // ScrollTrigger refresh handled by hook cleanup
     },
