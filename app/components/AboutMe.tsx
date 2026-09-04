@@ -48,14 +48,11 @@ export default function AboutMe() {
     <section className="about" id="about" ref={scope}>
       <div className="wrap">
         <p className="about-lead about-line">
-          I&apos;m JR Infante — a front-end web developer who turns layouts into
-          motion-driven interfaces that feel considered instead of static.
+          A person who only love to create things that live on the internet. 
+          Goal is to always build products that provide pixel-perfect, performant experiences.
         </p>
         <p className="about-body about-line">
-          Front-end developer with a background in digital art, an obsession with
-          fluid motion, and an eye for sharp, modern aesthetics.
-          I don't do static layouts, I build motion-driven web applications that
-          turn visitors into believers.
+          Building Brand and visuals with full of imagination and creativity.
         </p>
         <div className="about-stats">
           {stats.map((s) => (

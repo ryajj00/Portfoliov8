@@ -2,11 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
+import { useGSAPSingleReveal } from "@/app/hooks/useGSAPReveal";
 
 const projects = [
   {
     num: "01",
-    title: "18S Music Studio",
+    title: "Music Studio Booking App",
     desc: "A front-end web app for booking rehearsal-studio rooms — clean UI with calendar views and live availability checks.",
     tags: ["UI", "Front-end", "Web App", "Next.js", "VS Code"],
     img: "/imgs/workreel-imgs/01.png",
@@ -38,12 +39,26 @@ const projects = [
 export default function WorkReel() {
   const sectionRef = useRef<HTMLElement>(null);
   const [activeIdx, setActiveIdx] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window !== "undefined") {
+      return window.matchMedia("(max-width: 720px)").matches;
+    }
+    return false;
+  });
   const reduceMotion = useReducedMotion();
+
+  // Use shared hook for "Performance and Experience" text reveal
+  useGSAPSingleReveal(sectionRef, {
+    selector: ".reel-head span:first-child, .reel-mobile-head-card span",
+    fromVars: { opacity: 0, y: 30 },
+    scrollTrigger: {
+      start: "top 80%",
+      toggleActions: "play none none reverse",
+    },
+  });
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 720px)");
-    setIsMobile(mq.matches);
     const onChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);
     mq.addEventListener("change", onChange);
     return () => mq.removeEventListener("change", onChange);
@@ -71,11 +86,12 @@ export default function WorkReel() {
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
-  }, [isMobile]);
+  }, [isMobile, reduceMotion]);
 
   /* ---- Desktop: sticky pinned scroll ---- */
   if (!isMobile) {
     const currentImg = projects[activeIdx].img;
+
     return (
       <section className="reel-section" id="work" ref={sectionRef}>
         <div className="reel-sticky">
@@ -108,14 +124,14 @@ export default function WorkReel() {
 
   /* ---- Mobile: vertical card stack ---- */
   return (
-    <section className="reel-mobile" id="work">
-      <div className="reel-mobile-head">
-        <span>Performance and Experience</span>
-      </div>
+    <section className="reel-mobile" id="work" ref={sectionRef}>
       {projects.map((project) => (
         <article key={project.num} className="reel-mobile-card">
           <div className="reel-mobile-bg" style={{ backgroundImage: `url(${project.img})` }} />
           <div className="reel-mobile-overlay" />
+          <div className="reel-mobile-head-card">
+            <span>Performance and Experience</span>
+          </div>
           <div className="reel-mobile-content">
             <span className="reel-mobile-num">{project.num} / 0{projects.length}</span>
             <h3>{project.title}</h3>

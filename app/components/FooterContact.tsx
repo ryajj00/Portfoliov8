@@ -66,14 +66,14 @@ export default function FooterContact({
 
   if (customLink) {
     return (
-      <div className="footer-contact">
+      <div id="contact-info" className="footer-contact">
         {customLink}
       </div>
     );
   }
 
   return (
-    <div className="footer-contact">
+    <div id="contact-info" className="footer-contact">
       <a
         href="#"
         className="copyable"

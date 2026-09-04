@@ -13,8 +13,8 @@ interface FooterLegalProps {
 
 export default function FooterLegal({
   copyright = "© 2026 — JR Dev",
-  contact = "Remote — working worldwide",
-  builtWith = "Built with GSAP",
+  contact = "Remote — working",
+  builtWith = "Built with heart.",
   privacyHref = "mailto:infante.ryaj02@gmail.com?subject=Privacy",
 }: FooterLegalProps = {}) {
   return (

@@ -194,12 +194,34 @@ a {
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  text-align: center;
-  padding: 2rem 1.5rem;
+  text-align: left;
+  padding: 0 6vw;
   overflow: hidden;
-  background: #c3d8c5;
+  background: var(--bg);
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.85) 0%,
+    rgba(0, 0, 0, 0.55) 30%,
+    rgba(0, 0, 0, 0.25) 55%,
+    transparent 75%
+  ), url("/imgs/hero-background.JPG");
+  background-size: cover;
+  background-position: left center;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* floating ambient shapes */
@@ -210,50 +232,35 @@ a {
   filter: blur(60px);
   opacity: 0.55;
 }
-.hero .blob-1 { width: 420px; height: 420px; top: -10%; left: -8%; background: rgba(41, 41, 41, 0.35); }
-.hero .blob-2 { width: 360px; height: 360px; bottom: -12%; right: -8%; background: rgba(41, 41, 41, 0.22); }
-.hero .blob-3 { width: 180px; height: 180px; top: 55%; left: 12%; background: rgba(41, 41, 41, 0.18); }
+.hero .blob-1 { width: 420px; height: 420px; top: -10%; left: -8%; background: rgba(195, 216, 197, 0.35); }
+.hero .blob-2 { width: 360px; height: 360px; bottom: -12%; right: -8%; background: rgba(195, 216, 197, 0.22); }
+.hero .blob-3 { width: 180px; height: 180px; top: 55%; left: 12%; background: rgba(195, 216, 197, 0.18); }
 
 .hero .title {
-  margin: 0 0 1.6rem;
+  margin: 0 0 1rem;
   font-family: var(--font-display, "Unbounded", sans-serif);
   font-size: clamp(1.1rem, 3.2vw, 1.6rem);
   font-weight: 500;
-  color: #4a4a4a;
+  color: #292929;
   letter-spacing: 0.02em;
   position: relative;
   z-index: 1;
 }
 
-/* the name — new layout: J avatar R. =to=> JR [image] INFANTE. */
-.hero .name-wrapper {
+.hero .name {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  align-items: baseline;
+  gap: 0.3rem;
   flex-wrap: wrap;
   position: relative;
   z-index: 1;
-}
-
-.hero .name-left {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.15em;
-}
-
-.hero .name-right {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.15em;
+  margin-bottom: 1.5rem;
 }
 
 .hero .piece {
   font-family: var(--font-syne, "Syne", sans-serif);
-  font-size: clamp(2.8rem, 12.6vw, 8.4rem);
-  font-weight: 700;
+  font-size: clamp(3.5rem, 14vw, 9rem);
+  font-weight: 500;
   letter-spacing: -0.04em;
   line-height: 1.02;
   color: #292929;
@@ -262,81 +269,30 @@ a {
 
 .hero .period { color: #292929; }
 
-.hero .avatar,
 .hero .avatar-box {
-  font-size: clamp(2.8rem, 12.6vw, 8.4rem);
+  font-size: clamp(3.5rem, 14vw, 9rem);
   width: 1em;
   height: 1em;
-  min-width: 44px;
-  min-height: 44px;
+  min-width: 60px;
+  min-height: 60px;
   border-radius: 0;
   overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin: 0 0.3rem;
-  background: #e9edea;
+  margin: 0 0.2rem;
   flex: none;
-}
-.hero .avatar img, .hero .avatar svg,
-.hero .avatar-box img, .hero .avatar-box svg {
-  width: 100%; height: 100%; display: block;
-}
-
-.hero .arrow-wrap {
-  display: inline-flex;
-  align-items: center;
-  margin: 0 0.25em;
-}
-.hero .arrow-svg {
-  width: clamp(3rem, 8vw, 8rem);
-  height: auto;
-  flex-shrink: 0;
-}
-
-.hero .arrow-svg path {
-  stroke: #292929;
-  stroke-width: 2.5;
-}
-
-.hero .arrow-svg text {
-  fill: #9fb6a1;
-}
-
-.hero .name-right {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.15em;
-}
-
-.hero .name-right .piece { color: #292929; }
-
-.hero .avatar-box {
-  font-size: clamp(2.8rem, 12.6vw, 8.4rem);
-  width: 1em;
-  height: 1em;
-  min-width: 44px;
-  min-height: 44px;
-  border-radius: 0;
-  overflow: hidden;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 0.3rem;
   background: #e9edea;
-  flex: none;
+  background-image: url("/imgs/workreel-imgs/profile.JPG");
+  background-size: cover;
+  background-position: center;
 }
-
-.hero .avatar-box img, .hero .avatar-box svg { width: 100%; height: 100%; display: block; }
-
-.hero .arrow-svg path { stroke: #292929; stroke-width: 2.5; }
-.hero .arrow-svg text { fill: #9fb6a1; font-family: var(--font-mono); font-size: 8px; font-weight: 500; letter-spacing: 0.15em; }
 
 .hero .sub {
-  margin: 0 0 2.8rem;
+  margin: 0 0 3rem;
   font-size: clamp(1rem, 2.4vw, 1.25rem);
   font-weight: 400;
-  color: #4a4a4a;
+  color: #292929;
   max-width: 42ch;
   line-height: 1.6;
   position: relative;
@@ -346,24 +302,24 @@ a {
 
 .hero .scroll-cue {
   position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  color: #4a4a4a;
+  bottom: 8vh;
+  left: 6vw;
+  transform: none;
+  color: #adadad;
   font-size: 0.68rem;
   font-weight: 500;
   letter-spacing: 0.32em;
   text-transform: uppercase;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.6rem;
   z-index: 1;
 }
 .hero .scroll-cue .mouse {
   width: 22px;
   height: 36px;
-  border: 1.5px solid rgba(41, 41, 41, 0.5);
+  border: 1.5px solid rgba(173, 173, 173, 0.5);
   border-radius: 12px;
   position: relative;
 }
@@ -374,7 +330,7 @@ a {
   width: 3px;
   height: 8px;
   border-radius: 2px;
-  background: #292929;
+  background: #adadad;
   transform: translateX(-50%);
   animation: scroll-dot 1.8s ease-in-out infinite;
 }
@@ -686,6 +642,21 @@ a {
   text-transform: uppercase;
 }
 
+.reel-mobile-head-card {
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--fg);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  z-index: 2;
+  text-align: center;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
 .reel-mobile-card {
   position: relative;
   height: 75svh;
@@ -906,7 +877,7 @@ footer {
   top: 50%;
   transform: translateY(-50%);
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: clamp(11px, 1.2vw, 13px);
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--fg-dim);
@@ -925,6 +896,18 @@ footer {
 
 .footer-side.right {
   right: 6vw;
+}
+
+@media (max-width: 1200px) {
+  .footer-side {
+    font-size: clamp(10px, 1.1vw, 12px);
+  }
+}
+
+@media (max-width: 900px) {
+  .footer-side {
+    font-size: clamp(10px, 1.3vw, 12px);
+  }
 }
 
 /* tap targets: bigger hit area for contact links on touch */
@@ -979,6 +962,25 @@ footer {
   content: "Copied";
 }
 
+.footer-contact-track span {
+  font-family: var(--font-display, "Unbounded", sans-serif);
+  font-weight: 800;
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  text-transform: uppercase;
+  padding: 0 3rem;
+  color: var(--fg-dim);
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  opacity: 0.4;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-contact-track {
+    display: none;
+  }
+}
+
 .footer-contact {
   text-align: center;
 }
@@ -998,15 +1000,27 @@ footer {
   color: var(--accent);
 }
 
+@media (max-width: 1200px) {
+  .footer-contact a {
+    font-size: clamp(1.5rem, 4vw, 2.8rem);
+  }
+}
+
+@media (max-width: 900px) {
+  .footer-contact a {
+    font-size: clamp(1.4rem, 4.5vw, 2.5rem);
+  }
+}
+
 .footer-legal-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 24px;
   flex-wrap: wrap;
-  padding: 0 6vw 6vh;
+  padding: 5% 6vw 6vh;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: clamp(10px, 1.2vw, 12px);
   color: var(--fg-dim);
   letter-spacing: 0.03em;
   line-height: 1.7;
@@ -1041,10 +1055,11 @@ footer {
 
 .wordmark-clip {
   overflow: hidden;
-  height: clamp(70px, 9vw, 120px);
+  height: clamp(60px, 8vw, 110px);
   display: flex;
   align-items: flex-start;
   justify-content: center;
+  min-width: 0;
 }
 
 .wordmark-clip span {
@@ -1052,13 +1067,48 @@ footer {
   white-space: nowrap;
   font-family: var(--font-display, "Unbounded", sans-serif);
   font-weight: 900;
-  font-size: clamp(2rem, 11vw, 15rem);
+  font-size: clamp(2.1rem, 14vw, 19.6rem);
   line-height: 0.4;
   text-transform: none;
   color: var(--fg);
   letter-spacing: -0.04em;
   transform: translateY(30%);
   will-change: transform;
+  width: max-content;
+}
+
+@media (max-width: 1200px) {
+  .wordmark-clip span {
+    font-size: clamp(2.1rem, 12.6vw, 16.8rem);
+  }
+}
+
+@media (max-width: 900px) {
+  .wordmark-clip span {
+    font-size: clamp(2.45rem, 15.4vw, 19.6rem);
+  }
+}
+
+@media (max-width: 720px) {
+  .wordmark-clip {
+    height: clamp(100px, 18vw, 160px);
+    align-items: center;
+  }
+  .wordmark-clip span {
+    font-size: clamp(2.5rem, 16vw, 20rem);
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .wordmark-clip {
+    height: clamp(90px, 20vw, 150px);
+    align-items: center;
+  }
+  .wordmark-clip span {
+    font-size: clamp(2.2rem, 18vw, 18rem);
+    transform: translateY(0);
+  }
 }
 
 /* ---------- responsive / a11y ---------- */
@@ -1078,6 +1128,68 @@ footer {
   .hero .blob {
     animation: none !important;
   }
+}
+
+@media (max-width: 720px) {
+  .hero {
+    padding: 0 4vw;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 12vh;
+    text-align: center;
+  }
+  .hero::before {
+    background-image: url("/imgs/hero-background.JPG");
+    background-position: center;
+    background-size: cover;
+  }
+  .hero::before {
+    background-image: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.85) 0%,
+      rgba(0, 0, 0, 0.55) 30%,
+      rgba(0, 0, 0, 0.25) 55%,
+      transparent 75%
+    ), url("/imgs/hero-background.JPG");
+    background-position: center;
+    background-size: cover;
+  }
+  .hero .title {
+    font-size: clamp(1rem, 3.2vw, 1.4rem);
+    color: #adadad;
+  }
+  .hero .piece {
+    font-size: clamp(2.5rem, 14vw, 5.5rem);
+    color: #adadad;
+  }
+  .hero .period {
+    color: #adadad;
+  }
+  .hero .sub {
+    font-size: clamp(0.9rem, 2.4vw, 1.1rem);
+    max-width: 90%;
+    color: #adadad;
+  }
+  .hero .sub .accent {
+    color: #adadad;
+  }
+  .hero .scroll-cue {
+    bottom: 4vh;
+    left: 50%;
+    transform: translateX(-50%);
+    align-items: center;
+    font-size: 0.6rem;
+    color: #adadad;
+  }
+  .hero .scroll-cue .mouse {
+    border-color: rgba(173, 173, 173, 0.5);
+  }
+  .hero .scroll-cue .mouse-wheel {
+    background: #adadad;
+  }
+  .hero .blob-1 { width: 280px; height: 280px; top: -5%; left: -5%; }
+  .hero .blob-2 { width: 240px; height: 240px; bottom: -8%; right: -5%; }
+  .hero .blob-3 { width: 120px; height: 120px; top: 50%; left: 8%; }
 }
 
 @media (max-width: 720px) {

@@ -11,7 +11,7 @@ import { useMagnetic } from "@/app/hooks/useMagnetic";
 const navLinks = [
   { href: "#work", label: "Work" },
   { href: "#principles", label: "Toolkit" },
-  { href: "#contact", label: "Contact" },
+  { href: "#contact-info", label: "Contact" },
 ];
 
 export default function Navbar() {
@@ -229,7 +229,7 @@ export default function Navbar() {
           justify-content: space-between;
           font-family: var(--font-mono);
           font-size: 12px;
-          color: var(--fg-dim, #9fb6a1);
+          color: var(--fg-dim, #c3d8c5);
         }
         @media (max-width: 720px) {
           .nav-links {

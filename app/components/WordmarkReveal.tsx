@@ -1,12 +1,8 @@
 "use client";
 
-import { useGSAP } from "@gsap/react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
-
-gsap.registerPlugin(ScrollTrigger);
+import { useGSAPSingleReveal } from "@/app/hooks/useGSAPReveal";
 
 interface WordmarkRevealProps {
   /** Text to display in the wordmark */
@@ -21,29 +17,31 @@ export default function WordmarkReveal({
 }: WordmarkRevealProps = {}) {
   const scope = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
+  const [isMobile, setIsMobile] = useState(false);
 
-  useGSAP(() => {
-    const wordmark = scope.current?.querySelector<HTMLElement>(selector);
-    if (wordmark) {
-      if (reduceMotion) {
-        gsap.set(wordmark, { y: 0 });
-      } else {
-        gsap.set(wordmark, { yPercent: 60 });
-        gsap.to(wordmark, {
-          yPercent: 30,
-          duration: 1.2,
-          ease: "power4.out",
-          scrollTrigger: {
-            trigger: wordmark,
-            start: "top 90%",
-            toggleActions: "play none none reverse",
-          },
-        });
-      }
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const mq = window.matchMedia("(max-width: 720px)");
+      setIsMobile(mq.matches);
+      const onChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+      mq.addEventListener("change", onChange);
+      return () => mq.removeEventListener("change", onChange);
     }
+  }, []);
 
-    ScrollTrigger.refresh();
-  }, { scope });
+  // Use shared hook for scroll-triggered reveal
+  useGSAPSingleReveal(scope, {
+    selector,
+    fromVars: isMobile ? { opacity: 0 } : { yPercent: 60 },
+    scrollTrigger: {
+      start: "top 90%",
+      toggleActions: "play none none reverse",
+    },
+    delay: 0,
+    onComplete: () => {
+      // ScrollTrigger refresh handled by hook cleanup
+    },
+  });
 
   return (
     <div className="wordmark-clip">

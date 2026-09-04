@@ -62,12 +62,6 @@ export default function Hero() {
         stagger: 0.08,
         ease: "expo.out",
       }, 2.55)
-      .from(".hero .name .avatar-box", {
-        scale: 0.4,
-        opacity: 0,
-        duration: 0.7,
-        ease: "back.out(1.8)",
-      }, 2.68)
       .from(".hero .name .period", { opacity: 0, scale: 0, duration: 0.4, ease: "back.out(2)" }, 2.85)
       .from(".hero .sub", { y: 22, opacity: 0, duration: 0.7, ease: "power3.out" }, 3.3)
       .from(".hero .scroll-cue", { y: 14, opacity: 0, duration: 0.7, ease: "power2.out" }, 3.5);
@@ -106,22 +100,19 @@ export default function Hero() {
           <span id="num">0</span><span className="pct">%</span>
         </h1>
         <div className="loader-bar"><div className="loader-bar-fill" id="bar"></div></div>
-        <p className="loader-label">Loading · </p>
+        <p className="loader-label">Loading &middot; </p>
       </div>
 
       {/* ---------- hero content ---------- */}
       <h2 className="title">Hi, I&apos;m</h2>
 
       <h1 className="name">
-        <span className="piece">JR</span>
-        <span className="avatar-box">
-          <img src="/imgs/workreel-imgs/profile.JPG" alt="Portrait of JR Infante" />
-        </span>
-        <span className="piece">INFANTE</span><span className="period">.</span>
+        <span className="piece">JR </span>
+        <span className="piece"> INFANTE</span><span className="period">.</span>
       </h1>
 
       <p className="sub">
-        Bridging the gap between <span className="accent">design and scalable front-end</span> code.
+        Personal <span className="accent">Portfolio</span>.
       </p>
 
       <div className="scroll-cue">

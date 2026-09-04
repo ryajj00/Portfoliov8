@@ -1,18 +1,6 @@
 "use client";
 
 /**
- * Saves current scroll position to localStorage.
- * Used before navigation to restore position on return.
- */
-export function saveScrollPosition(key = "scrollY"): void {
-  try {
-    localStorage.setItem(key, String(window.scrollY));
-  } catch {
-    // Ignore localStorage errors (private browsing, quota, etc.)
-  }
-}
-
-/**
  * Restores scroll position from localStorage.
  * Call on component mount to return user to previous position.
  */
