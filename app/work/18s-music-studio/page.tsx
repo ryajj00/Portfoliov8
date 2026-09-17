@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Monitor, Calendar, Zap, Smartphone, Layers, Code } from "lucide-react";
+import { Calendar, Code, Layers, Monitor, Smartphone, Zap } from "lucide-react";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 import FooterLegal from "@/app/components/FooterLegal";
 
@@ -45,25 +45,43 @@ const features = [
   },
   {
     title: "Front-end Architecture",
-    desc: "Next.js 14 App Router, Server Components, typed API routes, ISR for static pages.",
+    desc: "Next.js App Router, React components, TypeScript, Tailwind CSS, and GSAP-powered interactions.",
     icon: Code,
-    highlight: "Type-safe end-to-end",
+    highlight: "Interactive build",
   },
 ];
 
 const techStack = [
   { name: "Next.js", logo: "/imgs/svg/nextjs-icon-svgrepo-com.svg" },
-  { name: "React", logo: "/imgs/svg/react-svgrepo-com.svg" },
   { name: "TypeScript", logo: "/imgs/svg/typescript-svgrepo-com.svg" },
   { name: "Tailwind CSS", logo: "/imgs/svg/tailwindcss-icon-svgrepo-com.svg" },
   { name: "GSAP", logo: "/imgs/svg/gsap.svg" },
-  { name: "Vercel", logo: "/imgs/svg/vercel.svg" }, // placeholder - may need to add
 ];
 
+// Music studio gallery images
+interface MusicStudioFile {
+  filename: string;
+  alt: string;
+  width?: number;
+  height?: number;
+}
+
+const musicStudioFiles: MusicStudioFile[] = [
+  { filename: "2.png", alt: "Live availability" },
+  { filename: "4.png", alt: "Mobile responsive interface" },
+  { filename: "1.png", alt: "Clean booking flow" },
+];
+
+const highlights = [
+  { value: "24", label: "Room Slots", suffix: "/7" },
+  { value: "3", label: "Calendar Views", suffix: "" },
+  { value: "100", label: "Responsive", suffix: "%" },
+  { value: "1", label: "Booking Flow", suffix: "" },
+];
+
+
 export default function Project18SMusicStudio() {
-  const router = useRouter();
   const [loaded, setLoaded] = useState(false);
-  const [goingHome, setGoingHome] = useState(false);
   const scope = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
 
@@ -72,14 +90,13 @@ export default function Project18SMusicStudio() {
     return () => clearTimeout(timer);
   }, []);
 
-  // GSAP scroll animations for features and tech stack
+  // GSAP scroll animations
   useGSAP(() => {
     if (reduceMotion) return;
 
     const el = scope.current;
     if (!el) return;
 
-    // Feature cards stagger reveal - improved timing
     gsap.from(".feature-card", {
       opacity: 0,
       y: 40,
@@ -93,7 +110,6 @@ export default function Project18SMusicStudio() {
       },
     });
 
-    // Highlight metrics counter animation
     gsap.from(".metric-value", {
       opacity: 0,
       y: 30,
@@ -107,7 +123,6 @@ export default function Project18SMusicStudio() {
       },
     });
 
-    // Tech stack cards stagger reveal
     gsap.from(".tech-card", {
       opacity: 0,
       y: 30,
@@ -121,68 +136,37 @@ export default function Project18SMusicStudio() {
       },
     });
 
-    // Screenshot frame reveal
-    gsap.from(".screenshot-frame", {
+    gsap.from(".gallery-item", {
       opacity: 0,
       y: 50,
-      duration: 1,
+      duration: 0.8,
+      stagger: 0.06,
       ease: "power4.out",
       scrollTrigger: {
-        trigger: ".project-screenshot",
+        trigger: ".project-gallery",
         start: "top 80%",
         toggleActions: "play none none reverse",
       },
     });
 
-    // Process steps reveal
-    gsap.from(".process-step", {
-      opacity: 0,
-      x: -40,
-      duration: 0.7,
-      stagger: 0.12,
-      ease: "power4.out",
-      scrollTrigger: {
-        trigger: ".project-process",
-        start: "top 80%",
-        toggleActions: "play none none reverse",
-      },
-    });
-
-    /* ---------- footer wordmark reveal ---------- */
     const wordmark = scope.current?.querySelector<HTMLElement>("#wordmark");
     if (wordmark) {
-      if (reduceMotion) {
-        gsap.set(wordmark, { y: 0 });
-      } else {
-        gsap.set(wordmark, { yPercent: 60 });
-        gsap.to(wordmark, {
-          yPercent: 30,
-          duration: 1.2,
-          ease: "power4.out",
-          scrollTrigger: {
-            trigger: wordmark,
-            start: "top 90%",
-            toggleActions: "play none none reverse",
-          },
-        });
-      }
+      gsap.set(wordmark, { yPercent: 60 });
+      gsap.to(wordmark, {
+        yPercent: 30,
+        duration: 1.2,
+        ease: "power4.out",
+        scrollTrigger: {
+          trigger: wordmark,
+          start: "top 90%",
+          toggleActions: "play none none reverse",
+        },
+      });
     }
 
     ScrollTrigger.refresh();
   }, { scope });
 
-  const handleBackToWork = useCallback(
-    (e: React.MouseEvent) => {
-      e.preventDefault();
-      setGoingHome(true);
-      setTimeout(() => {
-        router.push("/#work");
-      }, 700);
-    },
-    [router]
-  );
-
-  // Animate metric counters
   useEffect(() => {
     if (reduceMotion) return;
     const metrics = document.querySelectorAll<HTMLElement>(".metric-value[data-count]");
@@ -192,13 +176,22 @@ export default function Project18SMusicStudio() {
       const startTime = performance.now();
       const animate = (now: number) => {
         const progress = Math.min((now - startTime) / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+        const eased = 1 - Math.pow(1 - progress, 3);
         el.textContent = Math.round(target * eased).toLocaleString() + (el.dataset.suffix || "");
         if (progress < 1) requestAnimationFrame(animate);
       };
       requestAnimationFrame(animate);
     });
   }, [reduceMotion]);
+
+  const router = useRouter();
+  const handleBackToWork = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      router.push("/#work");
+    },
+    [router]
+  );
 
   return (
     <>
@@ -208,7 +201,8 @@ export default function Project18SMusicStudio() {
           position: fixed;
           inset: 0;
           z-index: 9999;
-          background: var(--bg);
+          background: #100c09;
+          color: #f3e6cf;
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -266,65 +260,22 @@ export default function Project18SMusicStudio() {
           to { transform: scaleX(1); }
         }
 
-        /* ---- Home intro (back to work) ---- */
-        .home-intro {
-          position: fixed;
-          inset: 0;
-          z-index: 9999;
+        .project-page {
+          --bg: #100c09;
+          --bg-alt: #17110d;
+          --fg: #f3e6cf;
+          --fg-dim: #ac9d83;
+          --accent: #f2c55f;
+          --accent-2: #b99850;
+          --line: #3a2a18;
+          min-height: 100vh;
+          padding: 0;
           background: var(--bg);
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 12px;
-          opacity: 0;
-          visibility: hidden;
-          transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        .home-intro.show {
-          opacity: 1;
-          visibility: visible;
-        }
-        .home-intro.done {
-          opacity: 0;
-          visibility: hidden;
-        }
-        .home-intro-title {
-          font-family: var(--font-display, "Unbounded", sans-serif);
-          font-weight: 800;
-          font-size: clamp(1.8rem, 5vw, 3.5rem);
-          text-transform: uppercase;
-          letter-spacing: -0.02em;
           color: var(--fg);
         }
-        .home-intro-sub {
-          font-family: var(--font-mono);
-          font-size: 13px;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-          color: var(--accent);
+        .next-footer {
+          background: var(--bg);
         }
-        .home-intro-bar {
-          width: 120px;
-          height: 2px;
-          background: var(--line);
-          border-radius: 2px;
-          margin-top: 20px;
-          overflow: hidden;
-        }
-        .home-intro-bar-fill {
-          height: 100%;
-          background: var(--accent);
-          border-radius: 2px;
-          transform: scaleX(0);
-          transform-origin: left;
-          animation: homeBarFill 0.7s ease forwards;
-        }
-        @keyframes homeBarFill {
-          to { transform: scaleX(1); }
-        }
-
-        .project-page { padding: 0 0 0; }
 
         /* ---- Hero ---- */
         .project-hero {
@@ -378,60 +329,6 @@ export default function Project18SMusicStudio() {
           color: var(--fg-dim);
           max-width: 50ch;
           line-height: 1.6;
-        }
-
-        /* ---- Meta bar ---- */
-        .project-meta {
-          display: flex;
-          gap: 48px;
-          padding: 40px 6vw;
-          max-width: 1200px;
-          margin: 0 auto;
-          border-bottom: 1px solid var(--line);
-        }
-        .meta-item { display: flex; flex-direction: column; gap: 6px; }
-        .meta-label {
-          font-family: var(--font-mono);
-          font-size: 11px;
-          color: var(--fg-dim);
-          text-transform: uppercase;
-          letter-spacing: 0.06em;
-        }
-        .meta-value {
-          font-family: var(--font-display, "Unbounded", sans-serif);
-          font-weight: 600;
-          font-size: 15px;
-          color: var(--fg);
-        }
-
-        /* Links in meta bar */
-        .meta-links .meta-value {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-        }
-        .link-group {
-          display: flex;
-          gap: 16px;
-          flex-wrap: wrap;
-        }
-        .meta-link {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          font-family: var(--font-mono);
-          font-size: 12px;
-          letter-spacing: 0.04em;
-          color: var(--fg-dim);
-          transition: color 0.2s ease, gap 0.2s ease;
-          text-decoration: none;
-        }
-        .meta-link:hover {
-          color: var(--accent);
-          gap: 10px;
-        }
-        .meta-link svg {
-          flex-shrink: 0;
         }
 
         /* ---- Meta + Tech Stack combined ---- */
@@ -496,46 +393,41 @@ export default function Project18SMusicStudio() {
           filter: grayscale(0%) brightness(1);
           transform: scale(1.1);
         }
-        .meta-links { display: flex; align-items: center; }
-        .link-group { display: flex; gap: 16px; flex-wrap: wrap; }
-        .meta-link {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
+        /* ---- Highlights / Metrics ---- */
+        .project-highlights { max-width: 1200px; margin: 80px auto 0; padding: 0 6vw; }
+        .highlights-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 24px;
+        }
+        .highlight-card {
+          padding: 32px 24px;
+          border: 1px solid var(--line);
+          border-radius: 12px;
+          background: var(--bg-alt);
+          text-align: center;
+          transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .highlight-card:hover {
+          border-color: var(--accent);
+          transform: translateY(-4px);
+          box-shadow: 0 20px 40px -12px rgba(195, 216, 197, 0.15);
+        }
+        .metric-value {
+          font-family: var(--font-display, "Unbounded", sans-serif);
+          font-weight: 800;
+          font-size: clamp(2.5rem, 5vw, 4rem);
+          line-height: 1.1;
+          color: var(--accent);
+          display: block;
+          margin-bottom: 8px;
+        }
+        .metric-label {
           font-family: var(--font-mono);
           font-size: 12px;
-          letter-spacing: 0.04em;
           color: var(--fg-dim);
-          transition: color 0.2s ease, gap 0.2s ease;
-          text-decoration: none;
-        }
-        .meta-link:hover { color: var(--accent); gap: 10px; }
-        .meta-link svg { flex-shrink: 0; }
-
-        /* ---- Screenshot ---- */
-        .project-screenshot {
-          max-width: 1200px;
-          margin: 60px auto 0;
-          padding: 0 6vw;
-        }
-        .screenshot-frame {
-          position: relative;
-          border-radius: 12px;
-          overflow: hidden;
-          border: 1px solid var(--line);
-          background: var(--bg-alt);
-        }
-        .screenshot-frame.video-frame {
-          border-radius: 12px;
-          overflow: hidden;
-          border: 1px solid var(--line);
-          background: var(--bg);
-        }
-        .screenshot-frame.video-frame .gallery-video {
-          width: 100%;
-          height: auto;
-          display: block;
-          border-radius: 12px;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
         }
 
         /* ---- Gallery ---- */
@@ -643,75 +535,42 @@ export default function Project18SMusicStudio() {
           letter-spacing: 0.05em;
         }
 
-        /* ---- Highlights / Metrics ---- */
-        .project-highlights { max-width: 1200px; margin: 80px auto 0; padding: 0 6vw; }
-        .highlights-grid {
+        /* ---- Tech Stack ---- */
+        .project-tech { max-width: 1200px; margin: 80px auto 0; padding: 0 6vw; }
+        .tech-grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
-          gap: 24px;
+          gap: 20px;
         }
-        .highlight-card {
-          padding: 32px 24px;
-          border: 1px solid var(--line);
-          border-radius: 12px;
-          background: var(--bg-alt);
-          text-align: center;
-          transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .highlight-card:hover {
-          border-color: var(--accent);
-          transform: translateY(-4px);
-          box-shadow: 0 20px 40px -12px rgba(195, 216, 197, 0.15);
-        }
-        .metric-value {
-          font-family: var(--font-display, "Unbounded", sans-serif);
-          font-weight: 800;
-          font-size: clamp(2.5rem, 5vw, 4rem);
-          line-height: 1.1;
-          color: var(--accent);
-          display: block;
-          margin-bottom: 8px;
-        }
-        .metric-label {
-          font-family: var(--font-mono);
-          font-size: 12px;
-          color: var(--fg-dim);
-          text-transform: uppercase;
-          letter-spacing: 0.08em;
-        }
-
-        /* ---- Process ---- */
-        .project-process { max-width: 1200px; margin: 80px auto 0; padding: 0 6vw; }
-        .process-steps {
+        .tech-card {
           display: flex;
           flex-direction: column;
-          gap: 24px;
-        }
-        .process-step {
-          display: flex;
-          gap: 24px;
+          align-items: center;
           padding: 28px;
           border: 1px solid var(--line);
-          border-radius: 12px;
+          border-radius: 10px;
           background: var(--bg-alt);
           transition: border-color 0.3s ease, transform 0.3s ease;
         }
-        .process-step:hover { border-color: var(--accent); transform: translateX(4px); }
-        .process-num {
-          font-family: var(--font-mono);
-          font-size: 12px;
-          color: var(--accent);
-          flex-shrink: 0;
-          margin-top: 4px;
+        .tech-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .tech-logo {
+          width: 60px;
+          height: 60px;
+          object-fit: contain;
+          filter: grayscale(100%) brightness(1.2);
+          margin-bottom: 16px;
+          transition: filter 0.3s ease, transform 0.3s ease;
         }
-        .process-content { flex: 1; }
-        .process-title {
+        .tech-card:hover .tech-logo {
+          filter: grayscale(0%) brightness(1);
+          transform: scale(1.1);
+        }
+        .tech-name {
           font-family: var(--font-display, "Unbounded", sans-serif);
           font-weight: 600;
-          font-size: 18px;
-          margin-bottom: 8px;
+          font-size: 16px;
+          color: var(--fg);
         }
-        .process-desc { font-size: 14px; line-height: 1.6; color: var(--fg-dim); }
 
         /* ---- Back link ---- */
         .project-back { max-width: 1200px; margin: 60px auto 0; padding: 0 6vw; }
@@ -719,51 +578,44 @@ export default function Project18SMusicStudio() {
           display: inline-flex;
           align-items: center;
           gap: 10px;
+          padding: 12px 18px;
           font-family: var(--font-mono);
           font-size: 13px;
+          font-weight: 600;
           letter-spacing: 0.04em;
-          color: var(--fg-dim);
-          transition: color 0.25s ease, gap 0.25s ease;
+          text-transform: uppercase;
+          color: var(--fg);
+          background: var(--bg-alt);
+          border: 1px solid var(--accent);
+          border-radius: 999px;
+          text-decoration: none;
+          transition: color 0.25s ease, background 0.25s ease, gap 0.25s ease, transform 0.25s ease;
           cursor: pointer;
         }
-        .back-link:hover { color: var(--accent); gap: 14px; }
+        .back-link:hover {
+          color: var(--bg);
+          background: var(--accent);
+          gap: 14px;
+          transform: translateX(2px);
+        }
+        .back-link:focus-visible {
+          outline: 2px solid var(--accent);
+          outline-offset: 4px;
+        }
 
         /* ---- Responsive ---- */
         @media (max-width: 900px) {
           .features-grid { grid-template-columns: repeat(2, 1fr); }
           .highlights-grid { grid-template-columns: repeat(2, 1fr); }
           .gallery-grid { grid-template-columns: repeat(2, 1fr); }
-          .process-step { flex-direction: column; gap: 12px; }
-          .project-meta { gap: 32px; flex-wrap: wrap; }
-          .tech-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        }
-        @media (max-width: 720px) {
-          .meta-links .meta-value {
-            flex-direction: row;
-            flex-wrap: wrap;
-          }
-          .link-group {
-            width: 100%;
-            justify-content: flex-start;
-          }
-          .feature-header {
-            gap: 8px;
-          }
-          .feature-icon {
-            width: 18px;
-            height: 18px;
-          }
-          .gallery-grid { grid-template-columns: 1fr; }
+          .tech-grid { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 720px) {
           .project-hero { height: 50svh; min-height: 340px; }
           .features-grid { grid-template-columns: 1fr; }
           .highlights-grid { grid-template-columns: repeat(2, 1fr); }
-          .project-meta { gap: 24px; padding: 28px 6vw; }
-          .process-step { padding: 20px; }
-          .process-title { font-size: 16px; }
-          .process-desc { font-size: 13px; }
-          .tech-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+          .gallery-grid { grid-template-columns: 1fr; }
+          .tech-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
           .tech-card { padding: 16px; }
           .tech-logo { width: 40px; height: 40px; }
         }
@@ -786,13 +638,6 @@ export default function Project18SMusicStudio() {
         <h1 className="intro-title">18S Music Studio</h1>
         <span className="intro-sub">Web App</span>
         <div className="intro-bar"><div className="intro-bar-fill" /></div>
-      </div>
-
-      {/* Home intro (back to work) */}
-      <div className={`home-intro${goingHome ? " show" : ""}${goingHome ? " done" : ""}`}>
-        <h1 className="home-intro-title">Home</h1>
-        <span className="home-intro-sub">Portfolio</span>
-        <div className="home-intro-bar"><div className="home-intro-bar-fill" /></div>
       </div>
 
       <article className="project-page" ref={scope}>
@@ -841,63 +686,66 @@ export default function Project18SMusicStudio() {
           </div>
                   </div>
 
-        {/* Screenshot - replaced with featured video */}
-        <div className="project-screenshot">
-          <div className="screenshot-frame video-frame">
-            <video
-              className="gallery-video"
-              src="/imgs/workreel-imgs/musicstudio/Jamspace Vid.mp4"
-              poster="/imgs/workreel-imgs/musicstudio/Jamspace.png"
-              preload="metadata"
-              playsInline
-              autoPlay
-              muted
-              loop
-            />
-          </div>
-        </div>
-
-        {/* Gallery / Video */}
-        <div className="project-gallery">
-          <h2 className="section-title">Gallery</h2>
-          <div className="gallery-grid">
-            {[
-              { src: "/imgs/workreel-imgs/musicstudio/2.png", alt: "Live availability dashboard" },
-              { src: "/imgs/workreel-imgs/musicstudio/3.png", alt: "Live availability" },
-              { src: "/imgs/workreel-imgs/musicstudio/4.png", alt: "Mobile responsive interface" },
-              { src: "/imgs/workreel-imgs/musicstudio/1.png", alt: "Clean booking flow" },
-            ].map((item, i) => (
-              <div key={i} className="gallery-item">
-                <Image
-                  className="gallery-image"
-                  src={item.src}
-                  alt={item.alt}
-                  width={800}
-                  height={600}
-                  loading="lazy"
-                />
-                <span className="gallery-caption">{item.alt}</span>
+        {/* Highlights / Metrics */}
+        <div className="project-highlights">
+          <div className="highlights-grid">
+            {highlights.map((h) => (
+              <div key={h.label} className="highlight-card">
+                <span
+                  className="metric-value"
+                  data-count={h.value}
+                  data-suffix={h.suffix}
+                >
+                  0
+                </span>
+                <span className="metric-label">{h.label}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Process */}
-        <div className="project-process">
-          <h2 className="section-title">Process</h2>
-          <div className="process-steps">
-            {[
-              { title: "Discovery", desc: "Workshop with studio owners to map booking pain points & user flows" },
-              { title: "Design System", desc: "Built component library in Figma — tokens, dark mode, responsive scale" },
-              { title: "Development", desc: "Next.js App Router + typed API routes, ISR for static pages, GSAP animations" },
-              { title: "Launch", desc: "Deployed to Vercel Edge with analytics, monitoring, and rollback strategy" },
-            ].map((step, i) => (
-              <div key={step.title} className="process-step">
-                <span className="process-num">0{i + 1}</span>
-                <div className="process-content">
-                  <h3 className="process-title">{step.title}</h3>
-                  <p className="process-desc">{step.desc}</p>
-                </div>
+        {/* Gallery */}
+        <div className="project-gallery">
+          <div className="gallery-grid">
+            <div className="gallery-item">
+              <video
+                className="gallery-video"
+                src="/imgs/workreel-imgs/musicstudio/Jamspace Vid.mp4"
+                poster="/imgs/workreel-imgs/musicstudio/Jamspace.png"
+                preload="metadata"
+                playsInline
+                autoPlay
+                muted
+                loop
+              />
+              <span className="gallery-caption">Studio booking experience</span>
+            </div>
+            {musicStudioFiles.map((item, i) => (
+              <div key={i} className="gallery-item">
+                {item.width && item.height ? (
+                  <Image
+                    className="gallery-image"
+                    src={`/imgs/workreel-imgs/musicstudio/${item.filename}`}
+                    alt={item.alt}
+                    width={item.width}
+                    height={item.height}
+                    sizes="(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 33vw"
+                    loading="lazy"
+                    style={{ width: '100%', height: 'auto', objectFit: "contain" }}
+                  />
+                ) : (
+                  <Image
+                    className="gallery-image"
+                    src={`/imgs/workreel-imgs/musicstudio/${item.filename}`}
+                    alt={item.alt}
+                    width={800}
+                    height={600}
+                    sizes="(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 33vw"
+                    loading="lazy"
+                    style={{ width: '100%', height: 'auto', objectFit: "cover" }}
+                  />
+                )}
+                <span className="gallery-caption">{item.alt}</span>
               </div>
             ))}
           </div>
@@ -919,6 +767,26 @@ export default function Project18SMusicStudio() {
               </div>
             ))}
           </div>
+
+        </div>
+
+        {/* Tech Stack */}
+        <div className="project-tech">
+          <h2 className="section-title">Tools</h2>
+          <div className="tech-grid">
+            {techStack.map((t) => (
+              <div key={t.name} className="tech-card">
+                <Image
+                  className="tech-logo"
+                  src={t.logo}
+                  alt={t.name}
+                  width={60}
+                  height={60}
+                />
+                <span className="tech-name">{t.name}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Back */}
@@ -932,7 +800,7 @@ export default function Project18SMusicStudio() {
         </div>
 
         {/* Footer - Contact style (same as main page) */}
-        <footer id="contact" ref={scope} className="next-footer">
+        <footer id="contact" className="next-footer">
           <div className="footer-zone">
             <div className="footer-divider left"></div>
             <div className="footer-divider right"></div>
@@ -942,7 +810,7 @@ export default function Project18SMusicStudio() {
 
             <div className="footer-contact">
               <a href="/work/poster-events">
-                Poster Event
+                Poster Events
               </a>
             </div>
           </div>

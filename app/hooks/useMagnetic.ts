@@ -4,6 +4,8 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 
 interface UseMagneticOptions {
+  /** Enable or disable the magnetic effect */
+  enabled?: boolean;
   /** Magnetic pull strength (0-1) */
   strength?: number;
   /** Duration of pull animation */
@@ -28,6 +30,7 @@ export function useMagnetic(
   options: UseMagneticOptions = {}
 ) {
   const {
+    enabled = true,
     strength = 0.25,
     duration = 0.4,
     releaseDuration = 0.6,
@@ -40,7 +43,10 @@ export function useMagnetic(
   >(new Map());
 
   useEffect(() => {
+    if (!enabled) return;
+
     const root = scopeRef.current;
+    const handlers = handlersRef.current;
     if (!root) return;
 
     const items = root.querySelectorAll<HTMLElement>(selector);
@@ -63,15 +69,16 @@ export function useMagnetic(
       };
       item.addEventListener("mousemove", onMove);
       item.addEventListener("mouseleave", onLeave);
-      handlersRef.current.set(item, { onMove, onLeave });
+      handlers.set(item, { onMove, onLeave });
     });
 
     return () => {
-      handlersRef.current.forEach(({ onMove, onLeave }, item) => {
+      handlers.forEach(({ onMove, onLeave }, item) => {
         item.removeEventListener("mousemove", onMove);
         item.removeEventListener("mouseleave", onLeave);
+        gsap.set(item, { x: 0, y: 0 });
       });
-      handlersRef.current.clear();
+      handlers.clear();
     };
-  }, [scopeRef, selector, strength, duration, releaseDuration, releaseEase]);
+  }, [enabled, scopeRef, selector, strength, duration, releaseDuration, releaseEase]);
 }

@@ -1,9 +1,9 @@
 import Hero from "./components/Hero";
 import Marquee from "./components/Marquee";
 import AboutMe from "./components/AboutMe";
-import WorkReel from "./components/WorkReel";
-import Principles from "./components/Principles";
-import Contact from "./components/Contact";
+import Work from "./components/work";
+import Toolkit from "./components/toolkit";
+import Contact from "./components/contact";
 
 export default function Home() {
   return (
@@ -11,9 +11,9 @@ export default function Home() {
       <Hero />
       <Marquee />
       <AboutMe />
-      <WorkReel />
+      <Work />
       <div className="principles-contact">
-        <Principles />
+        <Toolkit />
         <Contact />
       </div>
     </>

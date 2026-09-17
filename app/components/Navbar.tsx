@@ -3,15 +3,16 @@
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useReducedMotion } from "@/app/hooks/useReducedMotion";
 import { useMagnetic } from "@/app/hooks/useMagnetic";
 
 const navLinks = [
-  { href: "#work", label: "Work" },
-  { href: "#principles", label: "Toolkit" },
-  { href: "#contact-info", label: "Contact" },
+  { href: "/work", label: "Work" },
+  { href: "/toolkit", label: "Toolkit" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export default function Navbar() {
@@ -21,6 +22,8 @@ export default function Navbar() {
   const navRef = useRef<HTMLElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
+  const pathname = usePathname();
+  const isStandalonePage = pathname === "/work" || pathname === "/toolkit" || pathname === "/contact";
 
   useEffect(() => {
     const hero = document.querySelector<HTMLElement>(".hero");
@@ -45,6 +48,7 @@ export default function Navbar() {
 
   // Magnetic pull on desktop nav links (using shared hook)
   useMagnetic(navRef, {
+    enabled: !isStandalonePage,
     selector: ".nav-item",
     strength: 0.3,
     duration: 0.4,
@@ -112,13 +116,16 @@ export default function Navbar() {
             border-color 0.3s ease, padding 0.3s ease;
         }
         .nav.scrolled {
-          color: #c3d8c5;
+          color: #c3d9c5;
           background: rgba(41, 41, 41, 0.82);
           backdrop-filter: blur(10px);
           -webkit-backdrop-filter: blur(10px);
           border-bottom: 1px solid #3a3a3a;
           padding-top: 18px;
           padding-bottom: 18px;
+        }
+        .nav.standalone {
+          color: #c3d9c5;
         }
         .logo {
           font-family: var(--font-display);
@@ -152,10 +159,10 @@ export default function Navbar() {
         .nav-links a:hover {
           opacity: 1;
           background-color: #292929;
-          color: #c3d8c5;
+          color: #c3d9c5;
         }
         .nav.scrolled .nav-links a:hover {
-          background-color: #c3d8c5;
+          background-color: #c3d9c5;
           color: #292929;
         }
         .nav-links a::after {
@@ -185,11 +192,11 @@ export default function Navbar() {
           transition: color 0.3s ease;
         }
         .menu-toggle.open {
-          color: #c3d8c5;
+          color: #c3d9c5;
         }
         @media (max-width: 720px) {
           .menu-toggle.open {
-            color: #c3d8c5;
+            color: #c3d9c5;
           }
         }
         /* Mobile overlay menu */
@@ -205,7 +212,7 @@ export default function Navbar() {
           background: rgba(41, 41, 41, 0.97);
           backdrop-filter: blur(14px);
           -webkit-backdrop-filter: blur(14px);
-          color: #c3d8c5;
+          color: #c3d9c5;
           will-change: transform, opacity;
         }
         .menu-link {
@@ -213,12 +220,12 @@ export default function Navbar() {
           font-weight: 800;
           font-size: clamp(2rem, 8vw, 3rem);
           text-transform: uppercase;
-          color: #c3d8c5;
+          color: #c3d9c5;
           opacity: 0;
           letter-spacing: 0.02em;
         }
         .menu-link:hover {
-          color: var(--accent, #c3d8c5);
+          color: var(--accent, #c3d9c5);
         }
                 .menu-footer {
           position: absolute;
@@ -229,7 +236,7 @@ export default function Navbar() {
           justify-content: space-between;
           font-family: var(--font-mono);
           font-size: 12px;
-          color: var(--fg-dim, #c3d8c5);
+          color: var(--fg-dim, #c3d9c5);
         }
         @media (max-width: 720px) {
           .nav-links {
@@ -248,11 +255,20 @@ export default function Navbar() {
         }
       `}</style>
 
-      <nav ref={navRef} className={`nav ${scrolled ? "scrolled" : ""}`}>
+      <nav
+        ref={navRef}
+        className={`nav${scrolled ? " scrolled" : ""}${isStandalonePage ? " standalone" : ""}`}
+      >
         <Link
-          href="#hero"
+          href="/"
           className="logo nav-item"
-          onClick={() => setMenuOpen(false)}
+          onClick={(event) => {
+            setMenuOpen(false);
+            if (pathname === "/") {
+              event.preventDefault();
+              window.location.reload();
+            }
+          }}
           onMouseEnter={() => setLogoHover(true)}
           onMouseLeave={() => setLogoHover(false)}
         >

@@ -148,27 +148,44 @@ body {
   overflow-x: hidden;
 }
 
-/* ---------- minimal dark scrollbar ---------- */
+/* ---------- custom scrollbar ---------- */
 * {
-  scrollbar-width: thin; /* Firefox */
-  scrollbar-color: var(--accent-2) transparent;
+  scrollbar-width: auto; /* Firefox */
+  scrollbar-color: var(--accent-2) var(--bg-alt); /* thumb, track */
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--bg-alt);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--accent-2);
   border-radius: 4px;
+  border: 2px solid var(--bg-alt);
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent);
+  border-color: var(--bg-alt);
+}
+
+/* Hide scrollbar for clean hero/work sections */
+.hero,
+.reel-sticky,
+.project-hero,
+.project-screenshot {
+  scrollbar-width: none; /* Firefox */
+}
+.hero::-webkit-scrollbar,
+.reel-sticky::-webkit-scrollbar,
+.project-hero::-webkit-scrollbar,
+.project-screenshot::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
 }
 
 ::selection {
@@ -557,7 +574,6 @@ a {
   opacity: 0;
   transform: translateY(24px);
   transition: opacity 0.5s ease, transform 0.5s ease;
-  pointer-events: none;
   z-index: 2;
 }
 
@@ -605,6 +621,12 @@ a {
   padding: 4px 12px;
 }
 
+/* ---------- visit site button (desktop) ---------- */
+.reel-copy-frame .visit-site-btn {
+  align-self: flex-start;
+  margin-top: 24px;
+}
+
 .reel-view-link {
   display: inline-flex;
   align-items: center;
@@ -623,6 +645,30 @@ a {
 }
 
 .reel-view-link:hover {
+  background: var(--accent);
+  color: var(--bg);
+  gap: 12px;
+}
+
+/* ---------- visit site button ---------- */
+.visit-site-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+  padding: 10px 20px;
+  border: 1px solid var(--accent);
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+  transition: background 0.3s ease, color 0.3s ease, gap 0.3s ease, border-color 0.3s ease;
+  pointer-events: auto;
+}
+
+.visit-site-btn:hover {
   background: var(--accent);
   color: var(--bg);
   gap: 12px;
@@ -690,7 +736,7 @@ a {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 32px 6vw;
+  padding: 32px 6vw 92px;
 }
 
 .reel-mobile-num {
@@ -751,6 +797,18 @@ a {
 .reel-mobile-link:hover {
   background: var(--accent);
   color: var(--bg);
+}
+
+/* ---------- visit site button (mobile) ---------- */
+.reel-mobile-card .visit-site-btn {
+  position: absolute;
+  left: 6vw;
+  bottom: 24px;
+  z-index: 3;
+  margin-top: 0;
+  background: rgba(41, 41, 41, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 @media (max-width: 720px) {

@@ -10,7 +10,7 @@ import { useScrollReveal } from "@/app/hooks/useScrollReveal";
 gsap.registerPlugin(ScrollTrigger);
 
 const stats = [
-  { value: "5+", label: "WordPress pages built & maintained" },
+  { value: "40+", label: "Create Design & Maintained" },
   { value: "486", label: "Internship hours at Oracle Petroleum Corp" },
   { value: "BSIT", label: "Info Tech graduate · ICCT Colleges" },
 ];
