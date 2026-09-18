@@ -30,7 +30,7 @@ const posterFiles: PosterFile[] = [
   { filename: "Typography Poster.png", type: "png", alt: "Typography Poster Design", width: 800, height: 1200 },
 ];
 
-const techStack = [
+const techStack: Array<{ name: string; logo: string; href?: string }> = [
   { name: "Photoshop", logo: "/imgs/svg/photoshop-cc-logo-svgrepo-com.svg" },
   { name: "Canva", logo: "/imgs/svg/canva-svgrepo-com.svg" },
   { name: "Illustrator", logo: "/imgs/svg/adobe-illustrator-svgrepo-com.svg" },
@@ -392,6 +392,10 @@ export default function PosterEventsPage() {
           filter: grayscale(0%) brightness(1);
           transform: scale(1.1);
         }
+        .tech-card-link {
+          color: inherit;
+          text-decoration: none;
+        }
 
         /* ---- Screenshot / Featured ---- */
         .project-screenshot {
@@ -698,15 +702,33 @@ export default function PosterEventsPage() {
           </div>
           <div className="tech-grid-inline">
             {techStack.map((t) => (
-              <div key={t.name} className="tech-card-inline">
-                <Image
-                  src={t.logo}
-                  alt={t.name}
-                  width={38}
-                  height={38}
-                  className="tech-logo-inline"
-                />
-              </div>
+              t.href ? (
+                <a
+                  key={t.name}
+                  href={t.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="tech-card-inline tech-card-link"
+                >
+                  <Image
+                    src={t.logo}
+                    alt={t.name}
+                    width={38}
+                    height={38}
+                    className="tech-logo-inline"
+                  />
+                </a>
+              ) : (
+                <div key={t.name} className="tech-card-inline">
+                  <Image
+                    src={t.logo}
+                    alt={t.name}
+                    width={38}
+                    height={38}
+                    className="tech-logo-inline"
+                  />
+                </div>
+              )
             ))}
           </div>
         </div>
@@ -806,16 +828,35 @@ export default function PosterEventsPage() {
           <h2 className="section-title">Tools</h2>
           <div className="tech-grid">
             {techStack.map((t) => (
-              <div key={t.name} className="tech-card">
-                <Image
-                  className="tech-logo"
-                  src={t.logo}
-                  alt={t.name}
-                  width={60}
-                  height={60}
-                />
-                <span className="tech-name">{t.name}</span>
-              </div>
+              t.href ? (
+                <a
+                  key={t.name}
+                  href={t.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="tech-card tech-card-link"
+                >
+                  <Image
+                    className="tech-logo"
+                    src={t.logo}
+                    alt={t.name}
+                    width={60}
+                    height={60}
+                  />
+                  <span className="tech-name">{t.name}</span>
+                </a>
+              ) : (
+                <div key={t.name} className="tech-card">
+                  <Image
+                    className="tech-logo"
+                    src={t.logo}
+                    alt={t.name}
+                    width={60}
+                    height={60}
+                  />
+                  <span className="tech-name">{t.name}</span>
+                </div>
+              )
             ))}
           </div>
         </div>

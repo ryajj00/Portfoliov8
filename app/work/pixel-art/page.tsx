@@ -29,9 +29,14 @@ const pixelArtFiles: PixelArtFile[] = [
   { filename: "sprite burn.gif", type: "gif", alt: "Sprite Burn" },
 ];
 
-const techStack = [
+const techStack: Array<{ name: string; logo: string; href?: string }> = [
   { name: "Aseprite", logo: "/imgs/svg/aseprite-svgrepo-com.svg" },
   { name: "Pixquare", logo: "/imgs/svg/pixquare.svg" },
+  {
+    name: "Visit Hexadot",
+    logo: "/imgs/svg/web-svgrepo-com.svg",
+    href: "https://hexadot31.carrd.co",
+  },
 ];
 
 const features = [
@@ -487,6 +492,10 @@ export default function PixelArtGallery() {
           filter: grayscale(0%) brightness(1);
           transform: scale(1.1);
         }
+        .tech-card-link {
+          color: inherit;
+          text-decoration: none;
+        }
 
         /* ---- Screenshot / Featured ---- */
         .project-screenshot {
@@ -835,15 +844,33 @@ export default function PixelArtGallery() {
           </div>
           <div className="tech-grid-inline">
             {techStack.map((t) => (
-              <div key={t.name} className="tech-card-inline">
-                <Image
-                  src={t.logo}
-                  alt={t.name}
-                  width={38}
-                  height={38}
-                  className="tech-logo-inline"
-                />
-              </div>
+              t.href ? (
+                <a
+                  key={t.name}
+                  href={t.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="tech-card-inline tech-card-link"
+                >
+                  <Image
+                    src={t.logo}
+                    alt={t.name}
+                    width={38}
+                    height={38}
+                    className="tech-logo-inline"
+                  />
+                </a>
+              ) : (
+                <div key={t.name} className="tech-card-inline">
+                  <Image
+                    src={t.logo}
+                    alt={t.name}
+                    width={38}
+                    height={38}
+                    className="tech-logo-inline"
+                  />
+                </div>
+              )
             ))}
           </div>
         </div>
@@ -930,16 +957,35 @@ export default function PixelArtGallery() {
           <h2 className="section-title">Tools</h2>
           <div className="tech-grid">
             {techStack.map((t) => (
-              <div key={t.name} className="tech-card">
-                <Image
-                  className="tech-logo"
-                  src={t.logo}
-                  alt={t.name}
-                  width={60}
-                  height={60}
-                />
-                <span className="tech-name">{t.name}</span>
-              </div>
+              t.href ? (
+                <a
+                  key={t.name}
+                  href={t.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="tech-card tech-card-link"
+                >
+                  <Image
+                    className="tech-logo"
+                    src={t.logo}
+                    alt={t.name}
+                    width={60}
+                    height={60}
+                  />
+                  <span className="tech-name">{t.name}</span>
+                </a>
+              ) : (
+                <div key={t.name} className="tech-card">
+                  <Image
+                    className="tech-logo"
+                    src={t.logo}
+                    alt={t.name}
+                    width={60}
+                    height={60}
+                  />
+                  <span className="tech-name">{t.name}</span>
+                </div>
+              )
             ))}
           </div>
         </div>

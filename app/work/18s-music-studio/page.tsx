@@ -51,11 +51,14 @@ const features = [
   },
 ];
 
-const techStack = [
+const techStack: Array<{ name: string; logo: string; href?: string }> = [
   { name: "Next.js", logo: "/imgs/svg/nextjs-icon-svgrepo-com.svg" },
   { name: "TypeScript", logo: "/imgs/svg/typescript-svgrepo-com.svg" },
   { name: "Tailwind CSS", logo: "/imgs/svg/tailwindcss-icon-svgrepo-com.svg" },
-  { name: "GSAP", logo: "/imgs/svg/gsap.svg" },
+  {
+    name: "maintenance",
+    logo: "/imgs/svg/web-svgrepo-com.svg",
+  },
 ];
 
 // Music studio gallery images
@@ -393,6 +396,10 @@ export default function Project18SMusicStudio() {
           filter: grayscale(0%) brightness(1);
           transform: scale(1.1);
         }
+        .tech-card-link {
+          color: inherit;
+          text-decoration: none;
+        }
         /* ---- Highlights / Metrics ---- */
         .project-highlights { max-width: 1200px; margin: 80px auto 0; padding: 0 6vw; }
         .highlights-grid {
@@ -673,15 +680,33 @@ export default function Project18SMusicStudio() {
           </div>
           <div className="tech-grid-inline">
             {techStack.map((t) => (
-              <div key={t.name} className="tech-card-inline">
-                <Image
-                  src={t.logo}
-                  alt={t.name}
-                  width={38}
-                  height={38}
-                  className="tech-logo-inline"
-                />
-              </div>
+              t.href ? (
+                <a
+                  key={t.name}
+                  href={t.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="tech-card-inline tech-card-link"
+                >
+                  <Image
+                    src={t.logo}
+                    alt={t.name}
+                    width={38}
+                    height={38}
+                    className="tech-logo-inline"
+                  />
+                </a>
+              ) : (
+                <div key={t.name} className="tech-card-inline">
+                  <Image
+                    src={t.logo}
+                    alt={t.name}
+                    width={38}
+                    height={38}
+                    className="tech-logo-inline"
+                  />
+                </div>
+              )
             ))}
           </div>
                   </div>
@@ -775,16 +800,35 @@ export default function Project18SMusicStudio() {
           <h2 className="section-title">Tools</h2>
           <div className="tech-grid">
             {techStack.map((t) => (
-              <div key={t.name} className="tech-card">
-                <Image
-                  className="tech-logo"
-                  src={t.logo}
-                  alt={t.name}
-                  width={60}
-                  height={60}
-                />
-                <span className="tech-name">{t.name}</span>
-              </div>
+              t.href ? (
+                <a
+                  key={t.name}
+                  href={t.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="tech-card tech-card-link"
+                >
+                  <Image
+                    className="tech-logo"
+                    src={t.logo}
+                    alt={t.name}
+                    width={60}
+                    height={60}
+                  />
+                  <span className="tech-name">{t.name}</span>
+                </a>
+              ) : (
+                <div key={t.name} className="tech-card">
+                  <Image
+                    className="tech-logo"
+                    src={t.logo}
+                    alt={t.name}
+                    width={60}
+                    height={60}
+                  />
+                  <span className="tech-name">{t.name}</span>
+                </div>
+              )
             ))}
           </div>
         </div>
