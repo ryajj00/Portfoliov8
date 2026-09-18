@@ -3,7 +3,7 @@ import Marquee from "./components/Marquee";
 import AboutMe from "./components/AboutMe";
 import Work from "./components/work";
 import Toolkit from "./components/toolkit";
-import Contact from "./components/contact";
+import Contact from "./components/Contact";
 
 export default function Home() {
   return (

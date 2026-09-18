@@ -2,7 +2,7 @@
 "use client";
 
 import Work from "../components/work";
-import Contact from "../components/contact";
+import Contact from "../components/Contact";
 
 export default function WorkPage() {
   return (

@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import Contact from "../components/contact";
+import Contact from "../components/Contact";
 
 export default function ContactPage() {
   const [formSent, setFormSent] = useState(false);

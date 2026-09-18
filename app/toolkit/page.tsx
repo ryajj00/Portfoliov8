@@ -1,7 +1,7 @@
 "use client";
 
 import Toolkit from "../components/toolkit";
-import Contact from "../components/contact";
+import Contact from "../components/Contact";
 
 export default function ToolkitPage() {
   return (
