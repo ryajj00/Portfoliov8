@@ -27,8 +27,9 @@ const unbounded = Unbounded({
 });
 
 export const metadata: Metadata = {
-  title: "JR Infante - Portfolio",
-  description: "Personal portfolio website",
+  title: "JR Infante | Designer & Developer Portfolio",
+  description:
+    "Explore JR Infante's portfolio of digital experiences, visual design, front-end development, and interactive creative work.",
   icons: {
     icon: "/imgs/workreel-imgs/profile.JPG",
     shortcut: "/imgs/workreel-imgs/profile.JPG",
